@@ -5,6 +5,7 @@ import connectDB from './config/database.js';
 import authRoutes from './routes/auth.js';
 import teamRoutes from './routes/teams.js';
 import leaderboardRoutes from './routes/leaderboards.js';
+import activitiesRoutes from './routes/activities.js';
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.use((req, res, next) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/teams', teamRoutes);
 app.use('/api/leaderboards', leaderboardRoutes);
+app.use('/api/activities', activitiesRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

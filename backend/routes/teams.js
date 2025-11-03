@@ -1,5 +1,6 @@
 import express from 'express';
 import Team from '../models/Team.js';
+import Activity from '../models/Activity.js';
 import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
@@ -147,7 +148,7 @@ router.post('/players/:playerId/increment', authenticateToken, async (req, res) 
       return res.status(400).json({ message: 'Invalid increment amount (must be 1-100)' });
     }
 
-    const team = await Team.findById(req.teamId);
+    const team = await Team.findById(req.teamId).populate('season');
 
     if (!team) {
       return res.status(404).json({ message: 'Team not found' });
@@ -160,6 +161,23 @@ router.post('/players/:playerId/increment', authenticateToken, async (req, res) 
 
     player.count += amount;
     await team.save();
+
+    // Log activity
+    try {
+      await Activity.create({
+        type: 'tree_spotted',
+        teamId: team._id,
+        teamName: team.teamName,
+        playerId: player._id,
+        playerName: player.name,
+        count: amount,
+        newTotal: player.count,
+        season: team.season._id
+      });
+    } catch (activityError) {
+      console.error('Error logging activity:', activityError);
+      // Don't fail the request if activity logging fails
+    }
 
     res.json({
       message: 'Count updated successfully',

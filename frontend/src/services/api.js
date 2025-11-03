@@ -138,6 +138,12 @@ export const getSeasons = async () => {
   return handleResponse(response);
 };
 
+// Activities API
+export const getRecentActivities = async (limit = 20) => {
+  const response = await fetch(`${API_URL}/api/activities/recent?limit=${limit}`);
+  return handleResponse(response);
+};
+
 // Auth helpers
 export const saveToken = (token) => {
   localStorage.setItem('token', token);
