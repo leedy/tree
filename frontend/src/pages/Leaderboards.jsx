@@ -1,42 +1,33 @@
 import { useState, useEffect } from 'react';
-import { getTeamLeaderboard, getPlayerLeaderboard, getSeasons } from '../services/api';
+import { getTeamLeaderboard, getPlayerLeaderboard } from '../services/api';
 
 function Leaderboards() {
   const [view, setView] = useState('teams'); // 'teams' or 'players'
   const [teamLeaderboard, setTeamLeaderboard] = useState([]);
   const [playerLeaderboard, setPlayerLeaderboard] = useState([]);
-  const [seasons, setSeasons] = useState([]);
-  const [selectedSeason, setSelectedSeason] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
     loadData();
-  }, [selectedSeason]);
+  }, []);
 
   const loadData = async () => {
     try {
       setLoading(true);
-      const [teamsData, playersData, seasonsData] = await Promise.all([
-        getTeamLeaderboard(selectedSeason),
-        getPlayerLeaderboard(selectedSeason),
-        getSeasons()
+      const [teamsData, playersData] = await Promise.all([
+        getTeamLeaderboard(),
+        getPlayerLeaderboard()
       ]);
 
       setTeamLeaderboard(teamsData.leaderboard);
       setPlayerLeaderboard(playersData.leaderboard);
-      setSeasons(seasonsData.seasons);
       setError('');
     } catch (err) {
       setError(err.message || 'Failed to load leaderboards');
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleSeasonChange = (e) => {
-    const value = e.target.value;
-    setSelectedSeason(value === 'all' ? null : parseInt(value));
   };
 
   if (loading) {
@@ -58,7 +49,7 @@ function Leaderboards() {
         </h2>
 
         {/* View Toggle */}
-        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
           <button
             onClick={() => setView('teams')}
             className={`btn ${view === 'teams' ? 'btn-primary' : 'btn-outline'}`}
@@ -74,28 +65,6 @@ function Leaderboards() {
             Individual Players
           </button>
         </div>
-
-        {/* Season Filter */}
-        {seasons.length > 0 && (
-          <div className="form-group">
-            <label className="label" htmlFor="season">
-              Season
-            </label>
-            <select
-              id="season"
-              className="input"
-              value={selectedSeason || 'all'}
-              onChange={handleSeasonChange}
-            >
-              <option value="all">All Seasons</option>
-              {seasons.map((season) => (
-                <option key={season.year} value={season.year}>
-                  {season.year} {season.isActive ? '(Current)' : ''}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
       </div>
 
       {error && (
