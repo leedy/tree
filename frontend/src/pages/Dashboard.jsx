@@ -7,7 +7,6 @@ import {
   incrementPlayerCount,
   decrementPlayerCount
 } from '../services/api';
-import ActivityFeed from '../components/ActivityFeed';
 
 function Dashboard() {
   const [team, setTeam] = useState(null);
@@ -353,11 +352,6 @@ function Dashboard() {
             ))}
           </div>
         )}
-      </div>
-
-      {/* Activity Feed */}
-      <div className="card">
-        <ActivityFeed limit={15} />
       </div>
     </div>
   );

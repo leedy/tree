@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getTeamLeaderboard, getPlayerLeaderboard } from '../services/api';
+import ActivityFeed from '../components/ActivityFeed';
 
 function Leaderboards() {
   const [view, setView] = useState('teams'); // 'teams' or 'players'
@@ -228,6 +229,11 @@ function Leaderboards() {
           </div>
         </div>
       )}
+
+      {/* Activity Feed */}
+      <div className="card">
+        <ActivityFeed limit={20} />
+      </div>
     </div>
   );
 }
