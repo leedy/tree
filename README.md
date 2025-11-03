@@ -37,7 +37,19 @@ tree/
 - MongoDB server (accessible locally or remotely)
 - npm or yarn
 
-## Setup Instructions
+## Quick Start
+
+### Raspberry Pi Deployment (Recommended for Production)
+
+**For complete Raspberry Pi setup with systemd services and auto-start:**
+
+📖 **See [RASPBERRY_PI_SETUP.md](RASPBERRY_PI_SETUP.md)** for the full guide
+
+This is the recommended way to run Tree on a Truck in production on your home network.
+
+### Local Development Setup
+
+For development on your laptop/desktop:
 
 ### 1. Clone the Repository
 
@@ -83,23 +95,64 @@ The frontend will be available at **http://localhost:5173**
 
 ## Environment Variables
 
+Both backend and frontend require `.env` files. Templates are provided.
+
 ### Backend (.env)
 
+**Location:** `backend/.env`
+
+```bash
+cd backend
+cp .env.template .env
+nano .env  # Edit with your values
+```
+
+**Configuration:**
 ```env
-MONGO_HOST=your-mongodb-host
+# MongoDB Configuration
+MONGO_HOST=your-mongodb-host          # IP or hostname
 MONGO_PORT=27017
-MONGO_USERNAME=your-username
-MONGO_PASSWORD=your-password
-MONGO_DATABASE=treeontruck
-PORT=3001
+MONGO_USERNAME=your-username          # Leave empty if no auth
+MONGO_PASSWORD=your-password          # Leave empty if no auth
+MONGO_DATABASE=treeonatruck
+
+# Server Configuration
+PORT=3001                             # Use 3002 if 3001 is taken
+
+# JWT Secret (IMPORTANT: Change in production!)
 JWT_SECRET=your-secure-secret-key
+
+# Season dates (Black Friday to Christmas Eve)
+SEASON_START_MONTH=11
+SEASON_START_DAY=25
+SEASON_END_MONTH=12
+SEASON_END_DAY=24
 ```
 
 ### Frontend (.env)
 
+**Location:** `frontend/.env`
+
+```bash
+cd frontend
+cp .env.template .env
+nano .env  # Edit with your values
+```
+
+**For local development:**
 ```env
 VITE_API_URL=http://localhost:3001
 ```
+
+**For Raspberry Pi deployment:**
+```env
+VITE_API_URL=http://YOUR_PI_IP:3002
+```
+
+**IMPORTANT:**
+- Do NOT use `localhost` for Pi deployment - use actual IP
+- Do NOT add `/api` at the end (it's added automatically)
+- Must match the PORT in backend .env
 
 ## API Endpoints
 
