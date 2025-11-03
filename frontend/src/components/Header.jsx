@@ -23,6 +23,9 @@ function Header() {
           <NavLink to="/countdown" className="nav-link">
             Countdown
           </NavLink>
+          <NavLink to="/rules" className="nav-link">
+            Rules
+          </NavLink>
           <button
             onClick={handleLogout}
             className="nav-link"

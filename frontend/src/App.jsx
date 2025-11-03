@@ -7,6 +7,7 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Leaderboards from './pages/Leaderboards';
 import Countdown from './pages/Countdown';
+import Rules from './pages/Rules';
 
 function PrivateRoute({ children }) {
   return isAuthenticated() ? children : <Navigate to="/login" />;
@@ -68,6 +69,14 @@ function App() {
             element={
               <PrivateRoute>
                 <Countdown />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/rules"
+            element={
+              <PrivateRoute>
+                <Rules />
               </PrivateRoute>
             }
           />
