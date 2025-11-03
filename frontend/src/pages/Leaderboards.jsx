@@ -128,9 +128,26 @@ function Leaderboards() {
                         {isTeam ? item.teamName : item.playerName}
                       </h4>
                       {!isTeam && (
-                        <p style={{ fontSize: '0.875rem', color: 'var(--color-text-light)' }}>
-                          Team: {item.teamName}
-                        </p>
+                        <>
+                          <p style={{ fontSize: '0.875rem', color: 'var(--color-text-light)', marginBottom: '0.25rem' }}>
+                            Team: {item.teamName}
+                          </p>
+                          {/* Victory marks - like fighter pilot kill marks */}
+                          <div style={{
+                            fontSize: '0.6rem',
+                            lineHeight: '0.8rem',
+                            maxHeight: '2.4rem',
+                            overflow: 'hidden',
+                            wordWrap: 'break-word'
+                          }}>
+                            {Array(Math.min(item.count, 50)).fill('🎄').join('')}
+                            {item.count > 50 && (
+                              <span style={{ fontSize: '0.75rem', color: 'var(--color-text-light)', marginLeft: '0.25rem' }}>
+                                +{item.count - 50}
+                              </span>
+                            )}
+                          </div>
+                        </>
                       )}
                       {isTeam && (
                         <>
