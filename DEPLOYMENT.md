@@ -43,7 +43,7 @@ Add your MongoDB connection (update if needed):
 ```env
 MONGODB_URI=mongodb://admin:yourpassword@localhost:27017/treeonatruck?authSource=admin
 JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
-PORT=5001
+PORT=3001
 NODE_ENV=production
 ```
 
@@ -67,9 +67,9 @@ Update the API URL in `.env`:
 nano .env
 ```
 
-Set it to use the Pi's IP:
+Set it to use the Pi's IP (use the same port as your backend .env):
 ```env
-VITE_API_URL=http://<YOUR_PI_IP>:5001/api
+VITE_API_URL=http://<YOUR_PI_IP>:3001/api
 ```
 
 Build the production version:
@@ -118,8 +118,12 @@ pm2 startup
 
 ### 6. Access Your Apps
 
-- **Existing app**: http://<YOUR_PI_IP>:4173
-- **Tree on a Truck**: http://<YOUR_PI_IP>:4174
+- **Existing app backend**: http://<YOUR_PI_IP>:3000/api (or your backend port)
+- **Existing app frontend**: http://<YOUR_PI_IP>:4173
+- **Tree backend**: http://<YOUR_PI_IP>:3001/api
+- **Tree frontend**: http://<YOUR_PI_IP>:4174
+
+**Note on Ports:** Vite automatically increments ports if one is taken, so startup order doesn't matter. If you want explicit control, see `PM2-CONFIG.md`.
 
 ## Managing Both Apps
 
@@ -150,9 +154,10 @@ pm2 stop tree-frontend
 ## Troubleshooting
 
 ### Port Already in Use
-If port 4174 or 5001 is already taken, change them:
+If port 4174 or 3001 is already taken, change them:
 - Backend: Edit `backend/.env` PORT value
-- Frontend: Use different port with `--port XXXX`
+- Frontend: Vite will auto-increment (4174 → 4175 → 4176...) or use `--port XXXX` to specify
+- For explicit port control, see `PM2-CONFIG.md`
 
 ### MongoDB Connection Issues
 Check MongoDB is running:
@@ -168,7 +173,9 @@ sudo systemctl start mongod
 ### Can't Access from Other Devices
 Make sure your Pi's firewall allows the ports:
 ```bash
-sudo ufw allow 5001
+sudo ufw allow 3000
+sudo ufw allow 3001
+sudo ufw allow 4173
 sudo ufw allow 4174
 ```
 

@@ -2,8 +2,10 @@
 
 ## Before You Start
 - [ ] Raspberry Pi IP: `<YOUR_PI_IP>`
-- [ ] Existing app running on port: `4173`
-- [ ] Tree app will use ports: `5001` (backend) and `4174` (frontend)
+- [ ] Existing app running on port: `4173` (frontend)
+- [ ] Tree app will use ports: `3001` (backend) and `4174` (frontend)
+- [ ] Note: Vite auto-increments ports, so startup order doesn't matter!
+  - If you don't specify ports, Vite defaults to 4173, then 4174, 4175, etc.
 
 ## Step-by-Step Checklist
 
@@ -52,8 +54,8 @@ pm2 save
 ```
 
 ### 6. Test Access
-- [ ] Backend API: http://<YOUR_PI_IP>:5001/api/auth/status
-- [ ] Frontend: http://<YOUR_PI_IP>:4174
+- [ ] Backend API: http://<YOUR_PI_IP>:3001/api/auth/status
+- [ ] Frontend: http://<YOUR_PI_IP>:4174 (or check `pm2 list` for actual port)
 - [ ] Existing app still works: http://<YOUR_PI_IP>:4173
 
 ### 7. Register First Team
@@ -91,14 +93,14 @@ pm2 monit
 
 **Can't access from laptop/phone?**
 - Check Pi firewall: `sudo ufw status`
-- Allow ports if needed: `sudo ufw allow 5001 && sudo ufw allow 4174`
+- Allow ports if needed: `sudo ufw allow 3001 && sudo ufw allow 4174`
 
 **Backend won't start?**
 - Check MongoDB is running: `sudo systemctl status mongod`
 - Check .env file has correct credentials
 
 **Frontend shows connection error?**
-- Make sure `.env` has correct IP: `VITE_API_URL=http://<YOUR_PI_IP>:5001/api`
+- Make sure `.env` has correct IP and port: `VITE_API_URL=http://<YOUR_PI_IP>:3001/api`
 - Rebuild after changes: `npm run build && pm2 restart tree-frontend`
 
 ## Success!
