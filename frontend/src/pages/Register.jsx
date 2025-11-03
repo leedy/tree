@@ -43,12 +43,12 @@ function Register({ onRegister }) {
     <div className="container" style={{ paddingTop: '2rem' }}>
       <div style={{ maxWidth: '400px', margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <h1 style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🎄</h1>
-          <h2 style={{ color: 'var(--color-primary)', marginBottom: '0.5rem' }}>
+          <h1 style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>🎄🚙🎄</h1>
+          <h2 style={{ color: 'var(--color-primary)', marginBottom: '0.5rem', fontWeight: 'bold' }}>
             Tree on a Truck
           </h2>
           <p style={{ color: 'var(--color-text-light)' }}>
-            Create your team and start tracking!
+            🎅 Create your team and start tracking! 🎁
           </p>
         </div>
 

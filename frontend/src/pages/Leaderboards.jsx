@@ -45,7 +45,7 @@ function Leaderboards() {
       {/* Header */}
       <div className="card">
         <h2 style={{ color: 'var(--color-primary)', marginBottom: '1rem' }}>
-          Leaderboards
+          🎄 Leaderboards 🎄
         </h2>
 
         {/* View Toggle */}
@@ -90,16 +90,25 @@ function Leaderboards() {
               const rank = index + 1;
               const medalEmoji = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : '';
 
+              // Christmas-themed backgrounds for top 3
+              const getBackgroundColor = () => {
+                if (rank === 1) return 'linear-gradient(135deg, #FFD70020, #0F7A4E20)'; // Gold & Green
+                if (rank === 2) return 'linear-gradient(135deg, #C0C0C020, #C41E3A20)'; // Silver & Red
+                if (rank === 3) return 'linear-gradient(135deg, #CD7F3220, #0F7A4E20)'; // Bronze & Green
+                return 'var(--color-bg)';
+              };
+
               return (
                 <div
                   key={isTeam ? item.id : item.playerId}
                   className="card"
                   style={{
                     padding: '1rem',
-                    backgroundColor: rank <= 3 ? '#FEF3C7' : 'var(--color-bg)',
+                    background: getBackgroundColor(),
                     display: 'flex',
                     justifyContent: 'space-between',
-                    alignItems: 'center'
+                    alignItems: 'center',
+                    border: rank <= 3 ? '2px solid ' + (rank === 1 ? '#FFD700' : rank === 2 ? '#C0C0C0' : '#CD7F32') : undefined
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: 1 }}>

@@ -5,18 +5,20 @@
 }
 
 :root {
-  --color-primary: #165C3E;
-  --color-secondary: #B91C1C;
-  --color-accent: #D97706;
-  --color-bg: #F5F5F5;
+  /* Christmas Color Palette */
+  --color-primary: #0F7A4E;        /* Christmas Green */
+  --color-secondary: #C41E3A;      /* Christmas Red */
+  --color-accent: #FFD700;         /* Gold */
+  --color-bg: #FFF9F0;             /* Warm cream background */
   --color-card: #FFFFFF;
   --color-text: #1F2937;
   --color-text-light: #6B7280;
   --color-border: #E5E7EB;
-  --color-success: #059669;
-  --color-error: #DC2626;
-  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --color-success: #0F7A4E;
+  --color-error: #C41E3A;
+  --shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.12);
+  --shadow-festive: 0 4px 12px rgba(196, 30, 58, 0.15);
 }
 
 body {
@@ -50,6 +52,7 @@ body {
   padding: 1.5rem;
   box-shadow: var(--shadow);
   margin-bottom: 1rem;
+  border: 1px solid rgba(15, 122, 78, 0.1);
 }
 
 .btn {
@@ -76,7 +79,8 @@ body {
 }
 
 .btn-primary:hover {
-  background-color: #134D33;
+  background-color: #0D6340;
+  box-shadow: var(--shadow-festive);
 }
 
 .btn-secondary {
@@ -85,7 +89,8 @@ body {
 }
 
 .btn-secondary:hover {
-  background-color: #991B1B;
+  background-color: #A01830;
+  box-shadow: var(--shadow-festive);
 }
 
 .btn-outline {
@@ -152,13 +157,14 @@ body {
 
 /* Header */
 .header {
-  background: linear-gradient(135deg, var(--color-primary) 0%, #1a7a50 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, #C41E3A 100%);
   color: white;
   padding: 1rem;
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-festive);
   position: sticky;
   top: 0;
   z-index: 100;
+  border-bottom: 3px solid var(--color-accent);
 }
 
 .header-content {
