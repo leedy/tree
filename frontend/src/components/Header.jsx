@@ -12,7 +12,14 @@ function Header() {
   return (
     <header className="header">
       <div className="header-content">
-        <h1 className="header-title">🎄 Tree on a Truck</h1>
+        <div className="header-title" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <img
+            src="/images/logo.png"
+            alt="Tree on a Truck"
+            style={{ height: '50px', width: 'auto' }}
+          />
+          <span>Tree on a Truck</span>
+        </div>
         <nav className="nav">
           <NavLink to="/dashboard" className="nav-link">
             Dashboard
