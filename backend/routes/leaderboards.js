@@ -1,0 +1,116 @@
+import express from 'express';
+import Team from '../models/Team.js';
+import Season from '../models/Season.js';
+
+const router = express.Router();
+
+// Get team leaderboard
+router.get('/teams', async (req, res) => {
+  try {
+    const { season: seasonYear } = req.query;
+
+    let seasonFilter = {};
+    if (seasonYear) {
+      const season = await Season.findOne({ year: parseInt(seasonYear) });
+      if (season) {
+        seasonFilter.season = season._id;
+      }
+    } else {
+      // Default to current active season
+      const activeSeason = await Season.findOne({ isActive: true });
+      if (activeSeason) {
+        seasonFilter.season = activeSeason._id;
+      }
+    }
+
+    const teams = await Team.find(seasonFilter).populate('season');
+
+    // Calculate totals and sort
+    const leaderboard = teams.map(team => ({
+      id: team._id,
+      teamName: team.teamName,
+      totalCount: team.getTotalCount(),
+      playerCount: team.players.length,
+      season: team.season.year,
+      updatedAt: team.updatedAt
+    })).sort((a, b) => b.totalCount - a.totalCount);
+
+    res.json({
+      leaderboard,
+      season: seasonFilter.season ? teams[0]?.season.year : null
+    });
+  } catch (error) {
+    console.error('Error fetching team leaderboard:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Get individual player leaderboard
+router.get('/players', async (req, res) => {
+  try {
+    const { season: seasonYear } = req.query;
+
+    let seasonFilter = {};
+    if (seasonYear) {
+      const season = await Season.findOne({ year: parseInt(seasonYear) });
+      if (season) {
+        seasonFilter.season = season._id;
+      }
+    } else {
+      // Default to current active season
+      const activeSeason = await Season.findOne({ isActive: true });
+      if (activeSeason) {
+        seasonFilter.season = activeSeason._id;
+      }
+    }
+
+    const teams = await Team.find(seasonFilter).populate('season');
+
+    // Flatten all players from all teams
+    const allPlayers = [];
+    teams.forEach(team => {
+      team.players.forEach(player => {
+        allPlayers.push({
+          playerId: player._id,
+          playerName: player.name,
+          count: player.count,
+          teamId: team._id,
+          teamName: team.teamName,
+          season: team.season.year
+        });
+      });
+    });
+
+    // Sort by count descending
+    const leaderboard = allPlayers.sort((a, b) => b.count - a.count);
+
+    res.json({
+      leaderboard,
+      season: teams[0]?.season.year || null
+    });
+  } catch (error) {
+    console.error('Error fetching player leaderboard:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Get all available seasons
+router.get('/seasons', async (req, res) => {
+  try {
+    const seasons = await Season.find().sort({ year: -1 });
+
+    res.json({
+      seasons: seasons.map(s => ({
+        year: s.year,
+        startDate: s.startDate,
+        endDate: s.endDate,
+        isActive: s.isActive
+      }))
+    });
+  } catch (error) {
+    console.error('Error fetching seasons:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+export default router;
