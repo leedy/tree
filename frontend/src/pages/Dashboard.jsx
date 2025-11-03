@@ -7,7 +7,6 @@ import {
   incrementPlayerCount,
   decrementPlayerCount
 } from '../services/api';
-import ChristmasCountdown from '../components/ChristmasCountdown';
 
 function Dashboard() {
   const [team, setTeam] = useState(null);
@@ -170,9 +169,6 @@ function Dashboard() {
           </div>
         </div>
       </div>
-
-      {/* Christmas Countdown */}
-      <ChristmasCountdown />
 
       {error && (
         <div className="card" style={{ backgroundColor: '#FEE2E2', color: 'var(--color-error)' }}>

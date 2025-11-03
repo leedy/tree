@@ -20,6 +20,9 @@ function Header() {
           <NavLink to="/leaderboards" className="nav-link">
             Leaderboards
           </NavLink>
+          <NavLink to="/countdown" className="nav-link">
+            Countdown
+          </NavLink>
           <button
             onClick={handleLogout}
             className="nav-link"
