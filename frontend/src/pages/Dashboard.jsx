@@ -147,41 +147,93 @@ function Dashboard() {
   }
 
   return (
-    <div className="container" style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
-      {/* Team Header */}
-      <div className="card">
-        <h2 style={{ color: 'var(--color-primary)', marginBottom: '0.5rem' }}>
-          {team.teamName}
-        </h2>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-          <div>
-            <p style={{ color: 'var(--color-text-light)', fontSize: '0.875rem' }}>
+    <div className="container" style={{ paddingTop: '1rem', paddingBottom: '2rem' }}>
+      {/* Team Header - Compact */}
+      <div className="card" style={{ padding: '0.75rem 1rem', marginBottom: '0.75rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ flex: 1 }}>
+            <h2 style={{ color: 'var(--color-primary)', marginBottom: '0.25rem', fontSize: '1.25rem' }}>
+              {team.teamName}
+            </h2>
+            <p style={{ color: 'var(--color-text-light)', fontSize: '0.75rem', margin: 0 }}>
               Season {team.season}
             </p>
           </div>
           <div style={{ textAlign: 'right' }}>
-            <p style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--color-primary)' }}>
+            <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--color-primary)', lineHeight: 1, margin: 0 }}>
               {team.totalCount}
             </p>
-            <p style={{ color: 'var(--color-text-light)', fontSize: '0.875rem' }}>
-              Total Trees Spotted
+            <p style={{ color: 'var(--color-text-light)', fontSize: '0.75rem', margin: 0 }}>
+              Trees
             </p>
           </div>
         </div>
       </div>
 
       {error && (
-        <div className="card" style={{ backgroundColor: '#FEE2E2', color: 'var(--color-error)' }}>
+        <div className="card" style={{ backgroundColor: '#FEE2E2', color: 'var(--color-error)', padding: '0.75rem', marginBottom: '0.75rem' }}>
           {error}
         </div>
       )}
 
-      {/* Team Management - Collapsible */}
+      {/* Players List - Score Tracking */}
+      <div className="card" style={{ padding: '1rem', marginBottom: '0.75rem' }}>
+        <h3 style={{ marginBottom: '0.75rem', fontSize: '1.125rem' }}>Team Members ({team.players.length})</h3>
+
+        {team.players.length === 0 ? (
+          <p style={{ color: 'var(--color-text-light)', textAlign: 'center', padding: '1.5rem 0' }}>
+            No team members yet. Click "Manage Team" to get started!
+          </p>
+        ) : (
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+            gap: '0.75rem'
+          }}>
+            {team.players.map((player) => (
+              <div
+                key={player._id}
+                className="card"
+                style={{ padding: '0.5rem', backgroundColor: 'var(--color-bg)' }}
+              >
+                <h4 style={{ fontSize: '0.95rem', fontWeight: '600', marginBottom: '0.5rem', textAlign: 'center' }}>
+                  {player.name}
+                </h4>
+
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
+                  <button
+                    onClick={() => handleDecrement(player._id)}
+                    className="btn btn-outline"
+                    style={{ fontSize: '1.25rem', padding: '0.5rem 1rem', minWidth: '50px' }}
+                    disabled={player.count === 0 || actionLoading === `dec-${player._id}`}
+                  >
+                    -
+                  </button>
+                  <div style={{ textAlign: 'center', flex: 1 }}>
+                    <p style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--color-primary)', lineHeight: 1, margin: 0 }}>
+                      {player.count}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => handleIncrement(player._id)}
+                    className="btn btn-primary"
+                    style={{ fontSize: '1.25rem', padding: '0.5rem 1rem', minWidth: '50px' }}
+                    disabled={actionLoading === `inc-${player._id}`}
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Team Management - Collapsible - Now at Bottom */}
       {!showAddForm ? (
         <button
           onClick={() => setShowAddForm(true)}
           className="btn btn-outline btn-full"
-          style={{ marginBottom: '1rem' }}
         >
           Manage Team
         </button>
@@ -300,59 +352,6 @@ function Dashboard() {
           )}
         </div>
       )}
-
-      {/* Players List - Score Tracking */}
-      <div className="card">
-        <h3 style={{ marginBottom: '1rem' }}>Team Members ({team.players.length})</h3>
-
-        {team.players.length === 0 ? (
-          <p style={{ color: 'var(--color-text-light)', textAlign: 'center', padding: '2rem 0' }}>
-            No team members yet. Click "Manage Team" to get started!
-          </p>
-        ) : (
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-            gap: '1rem'
-          }}>
-            {team.players.map((player) => (
-              <div
-                key={player._id}
-                className="card"
-                style={{ padding: '0.75rem', backgroundColor: 'var(--color-bg)' }}
-              >
-                <h4 style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '0.5rem', textAlign: 'center' }}>
-                  {player.name}
-                </h4>
-
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
-                  <button
-                    onClick={() => handleDecrement(player._id)}
-                    className="btn btn-outline"
-                    style={{ fontSize: '1.25rem', padding: '0.5rem 1rem', minWidth: '50px' }}
-                    disabled={player.count === 0 || actionLoading === `dec-${player._id}`}
-                  >
-                    -
-                  </button>
-                  <div style={{ textAlign: 'center', flex: 1 }}>
-                    <p style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--color-primary)', lineHeight: 1 }}>
-                      {player.count}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => handleIncrement(player._id)}
-                    className="btn btn-primary"
-                    style={{ fontSize: '1.25rem', padding: '0.5rem 1rem', minWidth: '50px' }}
-                    disabled={actionLoading === `inc-${player._id}`}
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
     </div>
   );
 }
