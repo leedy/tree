@@ -12,25 +12,37 @@ function Header() {
   return (
     <header className="header">
       <div className="header-content">
-        <div className="header-title" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <div className="header-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <img
             src="/images/logo.png"
             alt="Tree on a Truck"
-            style={{ height: '50px', width: 'auto' }}
+            style={{ height: '40px', width: 'auto' }}
           />
-          <span>Tree on a Truck</span>
+          <span style={{
+            fontSize: '1rem',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+          }}>
+            Tree on a Truck
+          </span>
         </div>
-        <nav className="nav">
-          <NavLink to="/dashboard" className="nav-link">
+        <nav className="nav" style={{
+          display: 'flex',
+          gap: '0.5rem',
+          flexWrap: 'wrap',
+          justifyContent: 'flex-end'
+        }}>
+          <NavLink to="/dashboard" className="nav-link" style={{ padding: '0.4rem 0.6rem', fontSize: '0.875rem' }}>
             Dashboard
           </NavLink>
-          <NavLink to="/leaderboards" className="nav-link">
-            Leaderboards
+          <NavLink to="/leaderboards" className="nav-link" style={{ padding: '0.4rem 0.6rem', fontSize: '0.875rem' }}>
+            Boards
           </NavLink>
-          <NavLink to="/countdown" className="nav-link">
-            Countdown
+          <NavLink to="/countdown" className="nav-link" style={{ padding: '0.4rem 0.6rem', fontSize: '0.875rem' }}>
+            Time
           </NavLink>
-          <NavLink to="/rules" className="nav-link">
+          <NavLink to="/rules" className="nav-link" style={{ padding: '0.4rem 0.6rem', fontSize: '0.875rem' }}>
             Rules
           </NavLink>
           <button
@@ -41,8 +53,9 @@ function Header() {
               border: 'none',
               color: 'white',
               cursor: 'pointer',
-              fontSize: 'inherit',
-              fontWeight: 500
+              fontSize: '0.875rem',
+              fontWeight: 500,
+              padding: '0.4rem 0.6rem'
             }}
           >
             Logout
