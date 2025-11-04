@@ -20,16 +20,20 @@ const question = (query) => new Promise((resolve) => rl.question(query, resolve)
 
 const createAdmin = async () => {
   try {
-    // Check if MONGODB_URI is loaded
-    if (!process.env.MONGODB_URI) {
-      console.error('\n❌ Error: MONGODB_URI not found in .env file');
-      console.error('Make sure you have a .env file in the backend directory with MONGODB_URI set\n');
+    // Build MongoDB URI from environment variables
+    const mongoURI = `mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DATABASE}?authSource=admin`;
+
+    // Check if required variables are loaded
+    if (!process.env.MONGO_HOST || !process.env.MONGO_DATABASE) {
+      console.error('\n❌ Error: MongoDB configuration not found in .env file');
+      console.error('Make sure you have a .env file in the backend directory with MongoDB settings\n');
       process.exit(1);
     }
 
     // Connect to database
-    await mongoose.connect(process.env.MONGODB_URI);
-    console.log('\n✅ Connected to database\n');
+    await mongoose.connect(mongoURI);
+    console.log('\n✅ Connected to database');
+    console.log(`Database: ${process.env.MONGO_DATABASE}\n`);
 
     // Get admin details
     console.log('Create Admin Account');
