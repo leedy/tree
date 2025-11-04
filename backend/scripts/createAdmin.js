@@ -2,8 +2,14 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import Admin from '../models/Admin.js';
 import readline from 'readline';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 
-dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Load .env from backend directory
+dotenv.config({ path: join(__dirname, '..', '.env') });
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -14,6 +20,13 @@ const question = (query) => new Promise((resolve) => rl.question(query, resolve)
 
 const createAdmin = async () => {
   try {
+    // Check if MONGODB_URI is loaded
+    if (!process.env.MONGODB_URI) {
+      console.error('\n❌ Error: MONGODB_URI not found in .env file');
+      console.error('Make sure you have a .env file in the backend directory with MONGODB_URI set\n');
+      process.exit(1);
+    }
+
     // Connect to database
     await mongoose.connect(process.env.MONGODB_URI);
     console.log('\n✅ Connected to database\n');
