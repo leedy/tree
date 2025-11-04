@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard';
 import Leaderboards from './pages/Leaderboards';
 import Countdown from './pages/Countdown';
 import Rules from './pages/Rules';
+import Landing from './pages/Landing';
 
 function PrivateRoute({ children }) {
   return isAuthenticated() ? children : <Navigate to="/login" />;
@@ -83,7 +84,7 @@ function App() {
           <Route
             path="/"
             element={
-              isAuth ? <Navigate to="/dashboard" /> : <Navigate to="/login" />
+              isAuth ? <Navigate to="/dashboard" /> : <Landing />
             }
           />
         </Routes>
