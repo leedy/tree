@@ -4,6 +4,7 @@ import { register, saveToken } from '../services/api';
 
 function Register({ onRegister }) {
   const [teamName, setTeamName] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
@@ -28,7 +29,7 @@ function Register({ onRegister }) {
     setLoading(true);
 
     try {
-      const data = await register(teamName, password);
+      const data = await register(teamName, email, password);
       saveToken(data.token);
       onRegister();
       navigate('/dashboard');
@@ -68,6 +69,22 @@ function Register({ onRegister }) {
                 value={teamName}
                 onChange={(e) => setTeamName(e.target.value)}
                 placeholder="Enter a unique team name"
+                required
+                disabled={loading}
+              />
+            </div>
+
+            <div className="form-group">
+              <label className="label" htmlFor="email">
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                className="input"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
                 required
                 disabled={loading}
               />

@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { login, saveToken } from '../services/api';
+import { useNavigate } from 'react-router-dom';
+import { adminLogin, saveAdminToken } from '../services/api';
 
-function Login({ onLogin }) {
-  const [email, setEmail] = useState('');
+function AdminLogin({ onAdminLogin }) {
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -15,12 +15,12 @@ function Login({ onLogin }) {
     setLoading(true);
 
     try {
-      const data = await login(email, password);
-      saveToken(data.token);
-      onLogin();
-      navigate('/dashboard');
+      const data = await adminLogin(username, password);
+      saveAdminToken(data.token);
+      onAdminLogin();
+      navigate('/admin/dashboard');
     } catch (err) {
-      setError(err.message || 'Login failed');
+      setError(err.message || 'Admin login failed');
     } finally {
       setLoading(false);
     }
@@ -30,31 +30,25 @@ function Login({ onLogin }) {
     <div className="container" style={{ paddingTop: '2rem' }}>
       <div style={{ maxWidth: '400px', margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <img
-            src="/images/logo.png"
-            alt="Tree on a Truck"
-            style={{ maxWidth: '300px', width: '100%', height: 'auto', marginBottom: '1rem' }}
-          />
-          <p style={{ color: 'var(--color-text-light)', fontSize: '1.125rem' }}>
-            🎅 Spot trees on vehicles this Christmas season! 🎁
+          <h2 style={{ color: 'var(--color-primary)' }}>Admin Login</h2>
+          <p style={{ color: 'var(--color-text-light)', fontSize: '0.875rem' }}>
+            Administrative access only
           </p>
         </div>
 
         <div className="card">
-          <h3 style={{ marginBottom: '1.5rem' }}>Team Login</h3>
-
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label className="label" htmlFor="email">
-                Email
+              <label className="label" htmlFor="username">
+                Username
               </label>
               <input
-                id="email"
-                type="email"
+                id="username"
+                type="text"
                 className="input"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Enter admin username"
                 required
                 disabled={loading}
               />
@@ -70,7 +64,7 @@ function Login({ onLogin }) {
                 className="input"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
+                placeholder="Enter admin password"
                 required
                 disabled={loading}
               />
@@ -84,25 +78,13 @@ function Login({ onLogin }) {
               disabled={loading}
               style={{ marginTop: '1rem' }}
             >
-              {loading ? 'Logging in...' : 'Login'}
+              {loading ? 'Logging in...' : 'Admin Login'}
             </button>
           </form>
-
-          <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
-            <p style={{ color: 'var(--color-text-light)' }}>
-              Don't have a team?{' '}
-              <Link
-                to="/register"
-                style={{ color: 'var(--color-primary)', fontWeight: 600 }}
-              >
-                Register here
-              </Link>
-            </p>
-          </div>
         </div>
       </div>
     </div>
   );
 }
 
-export default Login;
+export default AdminLogin;

@@ -6,6 +6,8 @@ import authRoutes from './routes/auth.js';
 import teamRoutes from './routes/teams.js';
 import leaderboardRoutes from './routes/leaderboards.js';
 import activitiesRoutes from './routes/activities.js';
+import adminAuthRoutes from './routes/adminAuth.js';
+import adminRoutes from './routes/admin.js';
 
 dotenv.config();
 
@@ -28,6 +30,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/teams', teamRoutes);
 app.use('/api/leaderboards', leaderboardRoutes);
 app.use('/api/activities', activitiesRoutes);
+app.use('/api/admin/auth', adminAuthRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

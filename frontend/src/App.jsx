@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { isAuthenticated } from './services/api';
+import { isAuthenticated, isAdminAuthenticated } from './services/api';
 import Header from './components/Header';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -9,6 +9,8 @@ import Leaderboards from './pages/Leaderboards';
 import Countdown from './pages/Countdown';
 import Rules from './pages/Rules';
 import Landing from './pages/Landing';
+import AdminLogin from './pages/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
 
 function PrivateRoute({ children }) {
   return isAuthenticated() ? children : <Navigate to="/login" />;
@@ -18,12 +20,24 @@ function PublicRoute({ children }) {
   return !isAuthenticated() ? children : <Navigate to="/dashboard" />;
 }
 
+function AdminRoute({ children }) {
+  return isAdminAuthenticated() ? children : <Navigate to="/admin/login" />;
+}
+
+function AdminPublicRoute({ children }) {
+  return !isAdminAuthenticated() ? children : <Navigate to="/admin/dashboard" />;
+}
+
 function App() {
   const [isAuth, setIsAuth] = useState(isAuthenticated());
+  const [isAdminAuth, setIsAdminAuth] = useState(isAdminAuthenticated());
 
   useEffect(() => {
     // Listen for auth changes
-    const checkAuth = () => setIsAuth(isAuthenticated());
+    const checkAuth = () => {
+      setIsAuth(isAuthenticated());
+      setIsAdminAuth(isAdminAuthenticated());
+    };
     window.addEventListener('storage', checkAuth);
     return () => window.removeEventListener('storage', checkAuth);
   }, []);
@@ -85,6 +99,22 @@ function App() {
             path="/"
             element={
               isAuth ? <Navigate to="/dashboard" /> : <Landing />
+            }
+          />
+          <Route
+            path="/admin/login"
+            element={
+              <AdminPublicRoute>
+                <AdminLogin onAdminLogin={() => setIsAdminAuth(true)} />
+              </AdminPublicRoute>
+            }
+          />
+          <Route
+            path="/admin/dashboard"
+            element={
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
             }
           />
         </Routes>

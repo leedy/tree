@@ -37,21 +37,27 @@ const getCurrentSeason = async () => {
 // Register a new team
 router.post('/register', async (req, res) => {
   try {
-    const { teamName, password } = req.body;
+    const { teamName, email, password } = req.body;
 
     // Validation
-    if (!teamName || !password) {
-      return res.status(400).json({ message: 'Team name and password are required' });
+    if (!teamName || !email || !password) {
+      return res.status(400).json({ message: 'Team name, email, and password are required' });
     }
 
     if (password.length < 6) {
       return res.status(400).json({ message: 'Password must be at least 6 characters' });
     }
 
-    // Check if team already exists
-    const existingTeam = await Team.findOne({ teamName });
-    if (existingTeam) {
+    // Check if team name already exists
+    const existingTeamName = await Team.findOne({ teamName });
+    if (existingTeamName) {
       return res.status(409).json({ message: 'Team name already exists' });
+    }
+
+    // Check if email already exists
+    const existingEmail = await Team.findOne({ email: email.toLowerCase() });
+    if (existingEmail) {
+      return res.status(409).json({ message: 'Email already registered' });
     }
 
     // Get or create current season
@@ -60,6 +66,7 @@ router.post('/register', async (req, res) => {
     // Create new team
     const team = await Team.create({
       teamName,
+      email,
       password,
       season: season._id,
       players: []
@@ -67,7 +74,7 @@ router.post('/register', async (req, res) => {
 
     // Generate JWT token
     const token = jwt.sign(
-      { teamId: team._id, teamName: team.teamName },
+      { teamId: team._id, teamName: team.teamName, email: team.email },
       process.env.JWT_SECRET,
       { expiresIn: '30d' }
     );
@@ -78,6 +85,7 @@ router.post('/register', async (req, res) => {
       team: {
         id: team._id,
         teamName: team.teamName,
+        email: team.email,
         players: team.players,
         season: season.year
       }
@@ -91,15 +99,15 @@ router.post('/register', async (req, res) => {
 // Login
 router.post('/login', async (req, res) => {
   try {
-    const { teamName, password } = req.body;
+    const { email, password } = req.body;
 
     // Validation
-    if (!teamName || !password) {
-      return res.status(400).json({ message: 'Team name and password are required' });
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required' });
     }
 
-    // Find team
-    const team = await Team.findOne({ teamName }).populate('season');
+    // Find team by email
+    const team = await Team.findOne({ email: email.toLowerCase() }).populate('season');
     if (!team) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
@@ -112,7 +120,7 @@ router.post('/login', async (req, res) => {
 
     // Generate JWT token
     const token = jwt.sign(
-      { teamId: team._id, teamName: team.teamName },
+      { teamId: team._id, teamName: team.teamName, email: team.email },
       process.env.JWT_SECRET,
       { expiresIn: '30d' }
     );
@@ -123,6 +131,7 @@ router.post('/login', async (req, res) => {
       team: {
         id: team._id,
         teamName: team.teamName,
+        email: team.email,
         players: team.players,
         totalCount: team.getTotalCount(),
         season: team.season.year
