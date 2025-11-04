@@ -9,13 +9,16 @@ function Landing() {
       const now = new Date();
       const currentYear = now.getFullYear();
 
-      // Black Friday 2024: November 29
+      // Black Friday: Fourth Friday of November (day after Thanksgiving)
+      // For 2025: November 28
       // Note: Month is 0-indexed, so 10 = November
-      let blackFriday = new Date(2024, 10, 29, 0, 0, 0);
+      let blackFriday = new Date(currentYear, 10, 28, 0, 0, 0);
+      let targetYear = currentYear;
 
       // If Black Friday has passed this year, show next year
       if (now > blackFriday) {
-        blackFriday = new Date(currentYear + 1, 10, 29, 0, 0, 0);
+        blackFriday = new Date(currentYear + 1, 10, 28, 0, 0, 0);
+        targetYear = currentYear + 1;
       }
 
       const difference = blackFriday - now;
@@ -26,16 +29,16 @@ function Landing() {
         const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
-        return { days, hours, minutes, seconds, total: difference, started: false };
+        return { days, hours, minutes, seconds, total: difference, started: false, year: targetYear };
       }
 
       // Check if we're in season (Black Friday to Christmas Eve)
       const christmasEve = new Date(currentYear, 11, 24, 23, 59, 59);
       if (now >= blackFriday && now <= christmasEve) {
-        return { days: 0, hours: 0, minutes: 0, seconds: 0, total: 0, started: true };
+        return { days: 0, hours: 0, minutes: 0, seconds: 0, total: 0, started: true, year: targetYear };
       }
 
-      return { days: 0, hours: 0, minutes: 0, seconds: 0, total: 0, started: false };
+      return { days: 0, hours: 0, minutes: 0, seconds: 0, total: 0, started: false, year: targetYear };
     };
 
     // Initial calculation
@@ -194,7 +197,7 @@ function Landing() {
             </div>
 
             <p style={{ fontSize: '1.125rem', marginBottom: '1.5rem', opacity: 0.95 }}>
-              Black Friday - November 29, 2024
+              Black Friday - November 28, {timeLeft.year}
             </p>
 
             <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
@@ -296,7 +299,7 @@ function Landing() {
               <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🏁</div>
               <div style={{ fontWeight: 'bold', marginBottom: '0.25rem' }}>Season Start</div>
               <div style={{ color: 'var(--color-text-light)' }}>Black Friday</div>
-              <div style={{ color: 'var(--color-text-light)', fontSize: '0.875rem' }}>November 29</div>
+              <div style={{ color: 'var(--color-text-light)', fontSize: '0.875rem' }}>November 28</div>
             </div>
 
             <div>
