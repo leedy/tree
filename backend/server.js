@@ -1,6 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { existsSync } from 'fs';
 import connectDB from './config/database.js';
 import authRoutes from './routes/auth.js';
 import teamRoutes from './routes/teams.js';
@@ -8,6 +11,9 @@ import leaderboardRoutes from './routes/leaderboards.js';
 import activitiesRoutes from './routes/activities.js';
 import adminAuthRoutes from './routes/adminAuth.js';
 import adminRoutes from './routes/admin.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
@@ -42,10 +48,25 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({ message: 'Route not found' });
-});
+// Serve static files from the React app in production
+// Check if dist folder exists (production build)
+const distPath = path.join(__dirname, '../frontend/dist');
+if (existsSync(distPath)) {
+  app.use(express.static(distPath));
+
+  // Handle React routing - return index.html for all non-API routes
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(distPath, 'index.html'));
+  });
+  console.log('Serving production build from /dist');
+} else {
+  console.log('No production build found. Run "npm run build" first or use separate frontend dev server.');
+
+  // 404 handler for API-only mode
+  app.use((req, res) => {
+    res.status(404).json({ message: 'Route not found' });
+  });
+}
 
 // Error handler
 app.use((err, req, res, next) => {

@@ -7,10 +7,12 @@ export default defineConfig({
     port: 5174,
     host: true,
     allowedHosts: [
-      '.internal.notesin9.com',
+      '.int.notesin9.com',
       '.notesin9.com',
+      'treeonatruck.com',
       'localhost',
-      '127.0.0.1'
+      '127.0.0.1',
+      '192.168.1.20'
     ],
     proxy: {
       '/api': {
