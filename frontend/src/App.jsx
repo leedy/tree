@@ -9,6 +9,7 @@ import Leaderboards from './pages/Leaderboards';
 import Countdown from './pages/Countdown';
 import Rules from './pages/Rules';
 import Landing from './pages/Landing';
+import Contact from './pages/Contact';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 
@@ -95,6 +96,7 @@ function App() {
               </PrivateRoute>
             }
           />
+          <Route path="/contact" element={<Contact />} />
           <Route
             path="/"
             element={

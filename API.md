@@ -613,6 +613,98 @@ curl http://localhost:3001/api/leaderboards/seasons
 
 ---
 
+## Contact Form Endpoint
+
+### Send Contact Message
+
+#### POST /api/contact
+
+Send a contact form message via email.
+
+**Authentication:** Not required
+
+**Request Body:**
+```json
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "message": "I have a question about the game..."
+}
+```
+
+**Field Requirements:**
+- `name`: Required
+- `email`: Required, must be valid email format
+- `message`: Required, 10-2000 characters
+
+**Success Response (200 OK):**
+```json
+{
+  "message": "Your message has been sent successfully!"
+}
+```
+
+**Error Responses:**
+
+400 Bad Request:
+```json
+{
+  "error": "All fields are required (name, email, message)"
+}
+```
+
+400 Bad Request (invalid email):
+```json
+{
+  "error": "Invalid email format"
+}
+```
+
+400 Bad Request (message too short):
+```json
+{
+  "error": "Message must be at least 10 characters long"
+}
+```
+
+400 Bad Request (message too long):
+```json
+{
+  "error": "Message must be less than 2000 characters"
+}
+```
+
+503 Service Unavailable:
+```json
+{
+  "error": "Email service is not configured. Please contact the administrator."
+}
+```
+
+**Example:**
+```bash
+curl -X POST http://localhost:3001/api/contact \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "John Doe",
+    "email": "john@example.com",
+    "message": "I have a question about the game rules."
+  }'
+```
+
+**Email Configuration:**
+
+The contact form requires Gmail SMTP configuration in `backend/.env`:
+```env
+EMAIL_USER=your-gmail@gmail.com
+EMAIL_PASS=your-gmail-app-password
+EMAIL_TO=your-email@example.com
+```
+
+See README.md for detailed setup instructions.
+
+---
+
 ## Error Responses
 
 ### Standard Error Format
@@ -760,6 +852,10 @@ const data = await response.json();
 ---
 
 ## Changelog
+
+### v1.1.0
+- Contact form with email notifications (Gmail SMTP)
+- Email service integration
 
 ### v1.0.0 (Initial Release)
 - Team registration and authentication

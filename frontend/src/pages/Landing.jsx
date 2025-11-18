@@ -438,6 +438,19 @@ function Landing() {
             </Link>
           </div>
         </div>
+
+        {/* Footer */}
+        <div style={{ textAlign: 'center', marginTop: '2rem', padding: '1rem' }}>
+          <p style={{ color: 'var(--color-text-light)' }}>
+            Have questions or need help?{' '}
+            <Link
+              to="/contact"
+              style={{ color: 'var(--color-primary)', fontWeight: 600, textDecoration: 'underline' }}
+            >
+              Contact Us
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

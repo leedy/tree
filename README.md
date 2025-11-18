@@ -127,6 +127,11 @@ SEASON_START_MONTH=11
 SEASON_START_DAY=25
 SEASON_END_MONTH=12
 SEASON_END_DAY=24
+
+# Email Configuration (for contact form)
+EMAIL_USER=your-gmail@gmail.com        # Gmail address (must be @gmail.com)
+EMAIL_PASS=your-gmail-app-password     # Gmail App Password (NOT regular password)
+EMAIL_TO=your-email@example.com        # Where to receive contact messages
 ```
 
 ### Frontend (.env)
@@ -153,6 +158,71 @@ VITE_API_URL=http://YOUR_PI_IP:3002
 - Do NOT use `localhost` for Pi deployment - use actual IP
 - Do NOT add `/api` at the end (it's added automatically)
 - Must match the PORT in backend .env
+
+## Contact Form
+
+Tree on a Truck includes a contact form that allows users to send messages via email.
+
+### Email Setup (Gmail)
+
+The contact form uses Gmail SMTP to send emails. Follow these steps to configure:
+
+#### 1. Enable 2-Step Verification
+
+1. Go to https://myaccount.google.com/security
+2. Scroll to "How you sign in to Google"
+3. Click "2-Step Verification" and set it up
+
+**Note:** App Passwords only work with personal @gmail.com accounts, NOT Google Workspace accounts with custom domains.
+
+#### 2. Create App Password
+
+1. Go to https://myaccount.google.com/apppasswords (after enabling 2-Step Verification)
+2. Select "Mail" as the app
+3. Select "Other (Custom name)" and enter "Tree App"
+4. Click "Generate"
+5. Copy the 16-character password shown
+
+#### 3. Configure Environment Variables
+
+Edit `backend/.env`:
+
+```env
+EMAIL_USER=your-gmail@gmail.com        # Your @gmail.com address
+EMAIL_PASS=abcd efgh ijkl mnop        # The 16-char app password (spaces ok)
+EMAIL_TO=where-you-want@example.com   # Can be any email address
+```
+
+**Important Notes:**
+- `EMAIL_USER` must be a **@gmail.com** address
+- `EMAIL_PASS` is the **App Password**, NOT your regular Gmail password
+- `EMAIL_TO` can be any email address (where you want to receive messages)
+
+### Accessing the Contact Form
+
+The contact form is available at:
+- **Logged-in users:** Click "Contact" in the header navigation
+- **Public access:** `/contact` route (linked on landing page)
+- **Direct URL:** http://localhost:5174/contact (development)
+
+### Features
+
+- Name, email, and message fields
+- Client-side validation (10-2000 character limit)
+- Server-side validation and error handling
+- Formatted HTML emails with sender information
+- Success/error messages for user feedback
+- Mobile-responsive design
+
+### Troubleshooting Email
+
+If emails aren't sending:
+
+1. **Check credentials:** Verify `EMAIL_USER` and `EMAIL_PASS` in `.env`
+2. **App Password:** Make sure you're using the App Password, not your regular Gmail password
+3. **Gmail account:** Confirm you're using a @gmail.com account, not a custom domain
+4. **2-Step Verification:** Ensure it's enabled on your Google account
+5. **Backend logs:** Check the backend terminal for specific error messages
 
 ## Admin System
 
@@ -304,6 +374,7 @@ All admin endpoints require admin authentication token:
 - ✅ Historical data preservation
 - ✅ Activity feed showing recent tree sightings
 - ✅ **Admin panel** for managing teams, seasons, and activities
+- ✅ **Contact form** with email notifications (Gmail SMTP)
 - ✅ Mobile-first responsive design
 - ✅ Touch-friendly UI with large buttons
 

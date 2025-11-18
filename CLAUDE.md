@@ -24,9 +24,12 @@ tree/
 │   │   ├── teams.js     # Team/player management
 │   │   ├── leaderboards.js  # Rankings
 │   │   ├── activities.js    # Activity feed
+│   │   ├── contact.js   # Contact form
 │   │   ├── adminAuth.js     # Admin login
 │   │   └── admin.js     # Admin operations
 │   ├── middleware/      # Auth middleware
+│   ├── services/        # Service utilities
+│   │   └── emailService.js  # Email sending (nodemailer)
 │   ├── scripts/         # Utility scripts
 │   │   └── createAdmin.js
 │   ├── server.js        # Entry point
@@ -43,6 +46,7 @@ tree/
 │   │   │   ├── Login.jsx
 │   │   │   ├── Dashboard.jsx
 │   │   │   ├── Leaderboards.jsx
+│   │   │   ├── Contact.jsx
 │   │   │   ├── AdminLogin.jsx
 │   │   │   └── AdminDashboard.jsx
 │   │   ├── services/    # API service layer
@@ -133,7 +137,18 @@ SEASON_START_MONTH=11
 SEASON_START_DAY=25
 SEASON_END_MONTH=12
 SEASON_END_DAY=24
+
+# Email Configuration (for contact form)
+EMAIL_USER=your-gmail@gmail.com
+EMAIL_PASS=your-gmail-app-password
+EMAIL_TO=your-email@example.com
 ```
+
+**Email Setup:**
+- Contact form uses Gmail SMTP (nodemailer)
+- Requires Gmail App Password (not regular password)
+- Only works with @gmail.com accounts (not Google Workspace)
+- See README.md for detailed setup instructions
 
 ### Frontend (.env in frontend/)
 
@@ -211,6 +226,7 @@ Frontend uses service layer in `src/services/api.js`:
 - `GET /api/leaderboards/players` - Player leaderboard
 - `GET /api/leaderboards/seasons` - All seasons
 - `GET /api/activities` - Recent activity feed
+- `POST /api/contact` - Send contact form message (name, email, message)
 
 **Protected Team Routes** (require team JWT):
 - `GET /api/teams/me` - Current team details
@@ -370,6 +386,7 @@ In production, backend serves the built frontend from `dist/` folder. No separat
 - Historical data preservation
 - Activity feed showing recent tree sightings
 - Admin panel for management
+- Contact form with email notifications (Gmail SMTP)
 - Mobile-first responsive design
 - Touch-friendly UI with large buttons
 

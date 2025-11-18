@@ -144,6 +144,17 @@ export const getRecentActivities = async (limit = 20) => {
   return handleResponse(response);
 };
 
+// Contact API
+export const sendContactMessage = async (name, email, message) => {
+  const response = await fetch(`${API_URL}/api/contact`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, email, message })
+  });
+
+  return handleResponse(response);
+};
+
 // Auth helpers
 export const saveToken = (token) => {
   localStorage.setItem('token', token);

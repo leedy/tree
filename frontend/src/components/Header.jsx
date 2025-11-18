@@ -45,6 +45,9 @@ function Header() {
           <NavLink to="/rules" className="nav-link" style={{ padding: '0.4rem 0.6rem', fontSize: '0.875rem' }}>
             Rules
           </NavLink>
+          <NavLink to="/contact" className="nav-link" style={{ padding: '0.4rem 0.6rem', fontSize: '0.875rem' }}>
+            Contact
+          </NavLink>
           <button
             onClick={handleLogout}
             className="nav-link"
