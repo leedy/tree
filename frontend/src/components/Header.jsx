@@ -48,6 +48,9 @@ function Header() {
           <NavLink to="/contact" className="nav-link" style={{ padding: '0.4rem 0.6rem', fontSize: '0.875rem' }}>
             Contact
           </NavLink>
+          <NavLink to="/profile" className="nav-link" style={{ padding: '0.4rem 0.6rem', fontSize: '0.875rem' }}>
+            Profile
+          </NavLink>
           <button
             onClick={handleLogout}
             className="nav-link"

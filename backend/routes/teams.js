@@ -17,6 +17,7 @@ router.get('/me', authenticateToken, async (req, res) => {
     res.json({
       id: team._id,
       teamName: team.teamName,
+      email: team.email,
       players: team.players,
       totalCount: team.getTotalCount(),
       season: team.season.year,
@@ -229,6 +230,42 @@ router.post('/players/:playerId/decrement', authenticateToken, async (req, res) 
     });
   } catch (error) {
     console.error('Error decrementing count:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Change password
+router.put('/change-password', authenticateToken, async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ message: 'Current password and new password are required' });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ message: 'New password must be at least 6 characters' });
+    }
+
+    const team = await Team.findById(req.teamId);
+
+    if (!team) {
+      return res.status(404).json({ message: 'Team not found' });
+    }
+
+    // Verify current password
+    const isPasswordValid = await team.comparePassword(currentPassword);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Current password is incorrect' });
+    }
+
+    // Update password
+    team.password = newPassword;
+    await team.save();
+
+    res.json({ message: 'Password changed successfully' });
+  } catch (error) {
+    console.error('Error changing password:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });

@@ -88,6 +88,19 @@ export const deletePlayer = async (playerId) => {
   return handleResponse(response);
 };
 
+export const changePassword = async (currentPassword, newPassword) => {
+  const response = await fetch(`${API_URL}/api/teams/change-password`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeader()
+    },
+    body: JSON.stringify({ currentPassword, newPassword })
+  });
+
+  return handleResponse(response);
+};
+
 export const incrementPlayerCount = async (playerId, amount = 1) => {
   const response = await fetch(`${API_URL}/api/teams/players/${playerId}/increment`, {
     method: 'POST',

@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard';
 import Leaderboards from './pages/Leaderboards';
 import Countdown from './pages/Countdown';
 import Rules from './pages/Rules';
+import Profile from './pages/Profile';
 import Landing from './pages/Landing';
 import Contact from './pages/Contact';
 import AdminLogin from './pages/AdminLogin';
@@ -93,6 +94,14 @@ function App() {
             element={
               <PrivateRoute>
                 <Rules />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <Profile />
               </PrivateRoute>
             }
           />
