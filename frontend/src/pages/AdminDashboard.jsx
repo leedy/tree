@@ -12,8 +12,10 @@ import {
   adminDeleteSeason,
   adminGetActivities,
   adminDeleteActivity,
+  adminGetDailyStats,
   removeAdminToken
 } from '../services/api';
+import Calendar from '../components/Calendar';
 
 function AdminDashboard() {
   const navigate = useNavigate();
@@ -44,6 +46,9 @@ function AdminDashboard() {
   const [activities, setActivities] = useState([]);
   const [activitiesTotal, setActivitiesTotal] = useState(0);
 
+  // Calendar state
+  const [dailyStats, setDailyStats] = useState([]);
+
   useEffect(() => {
     loadData();
   }, [activeTab]);
@@ -65,6 +70,9 @@ function AdminDashboard() {
         const data = await adminGetActivities(100, 0);
         setActivities(data.activities);
         setActivitiesTotal(data.total);
+      } else if (activeTab === 'calendar') {
+        const data = await adminGetDailyStats();
+        setDailyStats(data.dailyStats);
       }
     } catch (err) {
       setError(err.message || 'Failed to load data');
@@ -188,7 +196,7 @@ function AdminDashboard() {
         borderBottom: '2px solid var(--color-border)',
         flexWrap: 'wrap'
       }}>
-        {['overview', 'teams', 'seasons', 'activities'].map(tab => (
+        {['overview', 'calendar', 'teams', 'seasons', 'activities'].map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -462,11 +470,11 @@ function AdminDashboard() {
                     }}
                   >
                     <div>
-                      <strong>{activity.team?.teamName}</strong>
+                      <strong>{activity.teamName}</strong>
                       <span style={{ color: 'var(--color-text-light)' }}> - {activity.playerName} </span>
                       <span>{activity.action === 'increment' ? 'added' : 'removed'} {activity.amount} tree(s)</span>
                       <div style={{ fontSize: '0.75rem', color: 'var(--color-text-light)', marginTop: '0.25rem' }}>
-                        {new Date(activity.timestamp).toLocaleString()}
+                        {new Date(activity.createdAt).toLocaleString()}
                       </div>
                     </div>
                     <button
@@ -479,6 +487,13 @@ function AdminDashboard() {
                   </div>
                 ))}
               </div>
+            </div>
+          )}
+
+          {/* Calendar Tab */}
+          {activeTab === 'calendar' && (
+            <div className="card">
+              <Calendar dailyStats={dailyStats} year={2025} />
             </div>
           )}
         </>

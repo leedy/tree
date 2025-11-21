@@ -303,6 +303,16 @@ export const adminDeleteActivity = async (activityId) => {
   return handleResponse(response);
 };
 
+export const adminGetDailyStats = async (seasonId = null) => {
+  const url = seasonId
+    ? `${API_URL}/api/admin/daily-stats?seasonId=${seasonId}`
+    : `${API_URL}/api/admin/daily-stats`;
+  const response = await fetch(url, {
+    headers: getAdminAuthHeader()
+  });
+  return handleResponse(response);
+};
+
 // Admin Stats API
 export const adminGetStats = async () => {
   const response = await fetch(`${API_URL}/api/admin/stats`, {

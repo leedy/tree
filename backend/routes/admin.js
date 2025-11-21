@@ -284,8 +284,7 @@ router.get('/activities', async (req, res) => {
     const skip = parseInt(req.query.skip) || 0;
 
     const activities = await Activity.find()
-      .populate('team', 'teamName')
-      .sort({ timestamp: -1 })
+      .sort({ createdAt: -1 })
       .limit(limit)
       .skip(skip);
 
@@ -318,6 +317,52 @@ router.delete('/activities/:id', async (req, res) => {
   } catch (error) {
     console.error('Delete activity error:', error);
     res.status(500).json({ message: 'Server error deleting activity' });
+  }
+});
+
+// Get daily tree counts for calendar
+router.get('/daily-stats', async (req, res) => {
+  try {
+    const { year, seasonId } = req.query;
+
+    // Build query filter
+    const matchFilter = {};
+
+    if (seasonId) {
+      matchFilter.season = seasonId;
+    }
+
+    // Get activities grouped by date
+    const dailyStats = await Activity.aggregate([
+      { $match: matchFilter },
+      {
+        $group: {
+          _id: {
+            year: { $year: '$createdAt' },
+            month: { $month: '$createdAt' },
+            day: { $dayOfMonth: '$createdAt' }
+          },
+          count: { $sum: '$count' },
+          activities: { $sum: 1 }
+        }
+      },
+      { $sort: { '_id.year': 1, '_id.month': 1, '_id.day': 1 } }
+    ]);
+
+    // Format the results
+    const formattedStats = dailyStats.map(stat => ({
+      date: `${stat._id.year}-${String(stat._id.month).padStart(2, '0')}-${String(stat._id.day).padStart(2, '0')}`,
+      year: stat._id.year,
+      month: stat._id.month,
+      day: stat._id.day,
+      treeCount: stat.count,
+      activityCount: stat.activities
+    }));
+
+    res.json({ dailyStats: formattedStats });
+  } catch (error) {
+    console.error('Get daily stats error:', error);
+    res.status(500).json({ message: 'Server error fetching daily stats' });
   }
 });
 
