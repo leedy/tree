@@ -37,10 +37,10 @@ function Header() {
             Dashboard
           </NavLink>
           <NavLink to="/leaderboards" className="nav-link" style={{ padding: '0.4rem 0.6rem', fontSize: '0.875rem' }}>
-            Boards
+            Standings
           </NavLink>
           <NavLink to="/countdown" className="nav-link" style={{ padding: '0.4rem 0.6rem', fontSize: '0.875rem' }}>
-            Time
+            Countdown
           </NavLink>
           <NavLink to="/rules" className="nav-link" style={{ padding: '0.4rem 0.6rem', fontSize: '0.875rem' }}>
             Rules
