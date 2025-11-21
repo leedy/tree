@@ -110,6 +110,31 @@ cd frontend
 npm install
 ```
 
+## Git Workflow
+
+**CRITICAL**: When asked if code is "synced with GitHub", "up to date with remote", or similar questions about repository sync status:
+
+1. **ALWAYS run `git fetch origin` FIRST** to contact GitHub's servers and get the latest remote state
+2. Then run `git status` to check sync status
+3. Then check for unpushed commits with `git log --branches --not --remotes --oneline`
+
+**Why this matters:**
+- `git status` alone only checks against your local copy of the remote state
+- Without fetching first, `git status` may report "up to date" even when GitHub has newer commits
+- The local repository doesn't know about remote changes until you explicitly fetch
+
+**Example - Correct workflow:**
+```bash
+git fetch origin                                    # Contact GitHub servers
+git status                                          # Check sync status
+git log --branches --not --remotes --oneline        # Check for unpushed commits
+```
+
+**Example - Incorrect workflow:**
+```bash
+git status  # ❌ May show stale "up to date" message
+```
+
 ## Environment Configuration
 
 ### Backend (.env in backend/)
