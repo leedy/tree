@@ -279,6 +279,69 @@ function Landing() {
           </div>
         </div>
 
+        {/* Game Rules */}
+        <div className="card" style={{ marginBottom: '2rem' }}>
+          <h2 style={{ color: 'var(--color-primary)', marginBottom: '1.5rem', textAlign: 'center' }}>
+            📜 Official Game Rules
+          </h2>
+
+          <div style={{ maxWidth: '700px', margin: '0 auto' }}>
+            <div style={{ marginBottom: '1.5rem' }}>
+              <h3 style={{ color: 'var(--color-secondary)', fontSize: '1.125rem', marginBottom: '0.75rem' }}>
+                🎄 What Counts as a Tree?
+              </h3>
+              <ul style={{ lineHeight: 1.8, color: 'var(--color-text)', paddingLeft: '1.5rem' }}>
+                <li>A <strong>real or artificial Christmas tree</strong> being transported on/in a vehicle</li>
+                <li>Tree must be visible from outside the vehicle</li>
+                <li>Trees on car roofs, in truck beds, trailers, or visible through windows all count</li>
+                <li>Wreaths, garlands, and decorations <strong>do not count</strong></li>
+              </ul>
+            </div>
+
+            <div style={{ marginBottom: '1.5rem' }}>
+              <h3 style={{ color: 'var(--color-secondary)', fontSize: '1.125rem', marginBottom: '0.75rem' }}>
+                ✅ Valid Sightings
+              </h3>
+              <ul style={{ lineHeight: 1.8, color: 'var(--color-text)', paddingLeft: '1.5rem' }}>
+                <li>Tree must be on a <strong>moving or parked vehicle</strong></li>
+                <li>First person to shout <strong>"TREE!"</strong> gets the point</li>
+                <li>Each unique tree can only be counted once</li>
+                <li>If a vehicle has multiple trees on it then each tree must be called to count</li>
+                <li>You must be able to see the tree when you call it</li>
+              </ul>
+            </div>
+
+            <div style={{ marginBottom: '1.5rem' }}>
+              <h3 style={{ color: 'var(--color-secondary)', fontSize: '1.125rem', marginBottom: '0.75rem' }}>
+                ❌ What Doesn't Count
+              </h3>
+              <ul style={{ lineHeight: 1.8, color: 'var(--color-text)', paddingLeft: '1.5rem' }}>
+                <li>Trees at lots, stores, or homes (not on vehicles)</li>
+                <li>Trees in a shopping cart</li>
+                <li>The same tree spotted multiple times</li>
+                <li>Trees on commercial delivery trucks or landscaping vehicles</li>
+                <li>Calling a tree you can't actually see</li>
+              </ul>
+            </div>
+
+            <div style={{
+              backgroundColor: 'var(--color-bg)',
+              padding: '1.25rem',
+              borderRadius: '8px',
+              borderLeft: '4px solid var(--color-accent)'
+            }}>
+              <h3 style={{ color: 'var(--color-secondary)', fontSize: '1.125rem', marginBottom: '0.75rem' }}>
+                🤝 Honor System
+              </h3>
+              <p style={{ lineHeight: 1.8, color: 'var(--color-text)', margin: 0 }}>
+                This game runs on the <strong>honor system</strong> and is meant for fun!
+                Be honest about your sightings, play fair, and enjoy the friendly competition.
+                The real prize is making holiday memories with family and friends!
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Season Info */}
         <div className="card" style={{
           background: 'linear-gradient(135deg, #0F7A4E20, #C41E3A20)',
