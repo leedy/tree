@@ -122,15 +122,20 @@ function Calendar({ dailyStats, year = 2025 }) {
                   flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  border: isToday ? '2px solid var(--color-accent)' : '1px solid var(--color-border)',
+                  border: isToday
+                    ? '2px solid var(--color-accent)'
+                    : hasActivity
+                      ? '2px solid var(--color-primary)'
+                      : '1px solid var(--color-border)',
                   borderRadius: '8px',
-                  backgroundColor: hasActivity ? 'var(--color-primary)' : 'var(--color-bg)',
-                  color: hasActivity ? 'white' : 'var(--color-text)',
+                  backgroundColor: 'var(--color-bg)',
+                  color: 'var(--color-text)',
                   fontSize: '0.875rem',
                   fontWeight: hasActivity ? 'bold' : 'normal',
                   cursor: hasActivity ? 'pointer' : 'default',
                   transition: 'transform 0.2s, box-shadow 0.2s',
-                  position: 'relative'
+                  position: 'relative',
+                  padding: '0.25rem'
                 }}
                 onMouseEnter={(e) => {
                   if (hasActivity) {
@@ -144,10 +149,17 @@ function Calendar({ dailyStats, year = 2025 }) {
                 }}
                 title={hasActivity ? `${dayData.treeCount} trees spotted` : 'No activity'}
               >
-                <span>{dayData.day}</span>
+                <span style={{
+                  position: 'absolute',
+                  top: '0.25rem',
+                  left: '0.25rem',
+                  fontSize: '0.75rem'
+                }}>
+                  {dayData.day}
+                </span>
                 {hasActivity && (
                   <span style={{
-                    fontSize: '0.65rem',
+                    fontSize: '1rem',
                     marginTop: '0.125rem'
                   }}>
                     🎄 {dayData.treeCount}
