@@ -4,6 +4,8 @@ import { isAuthenticated, isAdminAuthenticated } from './services/api';
 import Header from './components/Header';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import Dashboard from './pages/Dashboard';
 import Leaderboards from './pages/Leaderboards';
 import Countdown from './pages/Countdown';
@@ -65,6 +67,8 @@ function App() {
               </PublicRoute>
             }
           />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route
             path="/dashboard"
             element={

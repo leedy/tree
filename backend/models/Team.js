@@ -37,6 +37,14 @@ const teamSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  resetToken: {
+    type: String,
+    default: null
+  },
+  resetTokenExpiry: {
+    type: Date,
+    default: null
+  },
   players: [playerSchema],
   season: {
     type: mongoose.Schema.Types.ObjectId,

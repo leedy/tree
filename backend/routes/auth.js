@@ -1,7 +1,9 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 import Team from '../models/Team.js';
 import Season from '../models/Season.js';
+import { sendPasswordResetEmail } from '../services/emailService.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -140,6 +142,95 @@ router.post('/login', async (req, res) => {
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({ message: 'Server error during login' });
+  }
+});
+
+// Request password reset
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: 'Email is required' });
+    }
+
+    // Find team by email
+    const team = await Team.findOne({ email: email.toLowerCase() });
+
+    // Don't reveal if email exists or not for security
+    if (!team) {
+      return res.json({
+        message: 'If an account with that email exists, a password reset link has been sent.'
+      });
+    }
+
+    // Generate reset token
+    const resetToken = crypto.randomBytes(32).toString('hex');
+
+    // Hash token before storing (extra security)
+    const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+    // Set token and expiry (1 hour)
+    team.resetToken = hashedToken;
+    team.resetTokenExpiry = Date.now() + 3600000; // 1 hour
+    await team.save();
+
+    // Create reset URL
+    const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:5174'}/reset-password/${resetToken}`;
+
+    // Send email
+    await sendPasswordResetEmail({
+      email: team.email,
+      teamName: team.teamName,
+      resetToken,
+      resetUrl
+    });
+
+    res.json({
+      message: 'If an account with that email exists, a password reset link has been sent.'
+    });
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    res.status(500).json({ message: 'Server error processing password reset request' });
+  }
+});
+
+// Reset password with token
+router.post('/reset-password', async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+
+    if (!token || !newPassword) {
+      return res.status(400).json({ message: 'Token and new password are required' });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters' });
+    }
+
+    // Hash the token to compare with stored hash
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+    // Find team with valid token
+    const team = await Team.findOne({
+      resetToken: hashedToken,
+      resetTokenExpiry: { $gt: Date.now() }
+    });
+
+    if (!team) {
+      return res.status(400).json({ message: 'Invalid or expired reset token' });
+    }
+
+    // Update password (will be hashed by pre-save hook)
+    team.password = newPassword;
+    team.resetToken = null;
+    team.resetTokenExpiry = null;
+    await team.save();
+
+    res.json({ message: 'Password reset successful. You can now login with your new password.' });
+  } catch (error) {
+    console.error('Reset password error:', error);
+    res.status(500).json({ message: 'Server error during password reset' });
   }
 });
 

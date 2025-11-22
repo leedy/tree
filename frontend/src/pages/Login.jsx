@@ -74,6 +74,18 @@ function Login({ onLogin }) {
                 required
                 disabled={loading}
               />
+              <div style={{ marginTop: '0.5rem', textAlign: 'right' }}>
+                <Link
+                  to="/forgot-password"
+                  style={{
+                    color: 'var(--color-primary)',
+                    fontSize: '0.875rem',
+                    fontWeight: 500
+                  }}
+                >
+                  Forgot Password?
+                </Link>
+              </div>
             </div>
 
             {error && <div className="error-message">{error}</div>}

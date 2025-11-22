@@ -362,10 +362,14 @@ Frontend displays with medals/rankings
 ### Phase 2: Enhancements (Planned)
 - [ ] Photo uploads for sightings
 - [ ] Image gallery per team
-- [ ] Recent activity feed
-- [ ] Better mobile UI tweaks
+- [x] Recent activity feed (✅ Complete)
+- [x] Better mobile UI tweaks (✅ Hamburger menu added)
 - [ ] Team profiles with stats
 - [ ] Export data (CSV/JSON)
+- [x] Password recovery/reset (✅ Backend complete, email config needed)
+- [x] Updates/Announcements system (✅ Backend complete)
+- [ ] Updates/Announcements - Admin UI (create/edit/delete)
+- [ ] Updates/Announcements - User display (dashboard banner/card)
 
 ### Phase 3: Social Features (Future)
 - [ ] Team chat
