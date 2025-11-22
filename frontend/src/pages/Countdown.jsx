@@ -22,47 +22,6 @@ function Countdown() {
             Remember: It's all on the honor system. Happy hunting! 🎅
           </p>
         </div>
-
-        <div className="card" style={{
-          marginTop: '2rem',
-          background: 'linear-gradient(135deg, #0F7A4E20, #C41E3A20)',
-          border: '2px solid var(--color-primary)'
-        }}>
-          <h4 style={{ color: 'var(--color-primary)', marginBottom: '0.75rem' }}>
-            🏆 Quick Stats
-          </h4>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-            gap: '1rem',
-            marginTop: '1rem'
-          }}>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--color-primary)' }}>
-                30
-              </div>
-              <div style={{ fontSize: '0.875rem', color: 'var(--color-text-light)' }}>
-                Days in Season
-              </div>
-            </div>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--color-primary)' }}>
-                ∞
-              </div>
-              <div style={{ fontSize: '0.875rem', color: 'var(--color-text-light)' }}>
-                Trees to Spot
-              </div>
-            </div>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--color-primary)' }}>
-                🎄
-              </div>
-              <div style={{ fontSize: '0.875rem', color: 'var(--color-text-light)' }}>
-                Holiday Cheer
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );
