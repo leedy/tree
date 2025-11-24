@@ -116,3 +116,46 @@ Happy tree hunting!
     throw error;
   }
 };
+
+// Send new team registration notification to admin
+export const sendNewTeamNotificationEmail = async ({ teamName, email, season }) => {
+  try {
+    const transporter = createTransporter();
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: process.env.EMAIL_TO,
+      subject: `Tree on a Truck - New Team Registered: ${teamName}`,
+      text: `
+A new team has registered for Tree on a Truck!
+
+Team Name: ${teamName}
+Email: ${email}
+Season: ${season}
+Registration Time: ${new Date().toLocaleString()}
+      `,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #2d5016;">🎄 New Team Registration!</h2>
+          <div style="background-color: #f0f9ff; padding: 20px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #2d5016;">
+            <p style="margin: 5px 0;"><strong>Team Name:</strong> ${teamName}</p>
+            <p style="margin: 5px 0;"><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+            <p style="margin: 5px 0;"><strong>Season:</strong> ${season}</p>
+            <p style="margin: 5px 0;"><strong>Registration Time:</strong> ${new Date().toLocaleString()}</p>
+          </div>
+          <div style="text-align: center; margin-top: 30px; color: #999; font-size: 12px;">
+            Tree on a Truck Admin Notification
+          </div>
+        </div>
+      `,
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log('New team notification email sent:', info.messageId);
+    return { success: true, messageId: info.messageId };
+  } catch (error) {
+    console.error('Error sending new team notification email:', error);
+    // Don't throw - registration should succeed even if notification fails
+    return { success: false, error: error.message };
+  }
+};

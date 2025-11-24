@@ -17,10 +17,41 @@ function Dashboard() {
   const [editingPlayerName, setEditingPlayerName] = useState('');
   const [actionLoading, setActionLoading] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
     loadTeam();
   }, []);
+
+  // Countdown timer effect
+  useEffect(() => {
+    if (!team || team.allowAddingTrees || !team.seasonStartDate) {
+      return;
+    }
+
+    const updateCountdown = () => {
+      const now = new Date().getTime();
+      const startTime = new Date(team.seasonStartDate).getTime();
+      const distance = startTime - now;
+
+      if (distance < 0) {
+        setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      setCountdown({ days, hours, minutes, seconds });
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+
+    return () => clearInterval(interval);
+  }, [team]);
 
   const loadTeam = async () => {
     try {
@@ -176,6 +207,84 @@ function Dashboard() {
         </div>
       )}
 
+      {!team.allowAddingTrees && (
+        <div className="card" style={{
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          color: 'white',
+          padding: '1.5rem',
+          marginBottom: '0.75rem',
+          textAlign: 'center',
+          borderRadius: '12px',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+        }}>
+          <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.25rem', fontWeight: 'bold' }}>
+            🎄 Season Starts Soon! 🎄
+          </h3>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, 1fr)',
+            gap: '0.75rem',
+            marginBottom: '1rem'
+          }}>
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.2)',
+              padding: '1rem 0.5rem',
+              borderRadius: '8px',
+              backdropFilter: 'blur(10px)'
+            }}>
+              <div style={{ fontSize: '2rem', fontWeight: 'bold', lineHeight: '1' }}>
+                {countdown.days}
+              </div>
+              <div style={{ fontSize: '0.75rem', marginTop: '0.25rem', opacity: 0.9 }}>
+                Days
+              </div>
+            </div>
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.2)',
+              padding: '1rem 0.5rem',
+              borderRadius: '8px',
+              backdropFilter: 'blur(10px)'
+            }}>
+              <div style={{ fontSize: '2rem', fontWeight: 'bold', lineHeight: '1' }}>
+                {countdown.hours}
+              </div>
+              <div style={{ fontSize: '0.75rem', marginTop: '0.25rem', opacity: 0.9 }}>
+                Hours
+              </div>
+            </div>
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.2)',
+              padding: '1rem 0.5rem',
+              borderRadius: '8px',
+              backdropFilter: 'blur(10px)'
+            }}>
+              <div style={{ fontSize: '2rem', fontWeight: 'bold', lineHeight: '1' }}>
+                {countdown.minutes}
+              </div>
+              <div style={{ fontSize: '0.75rem', marginTop: '0.25rem', opacity: 0.9 }}>
+                Minutes
+              </div>
+            </div>
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.2)',
+              padding: '1rem 0.5rem',
+              borderRadius: '8px',
+              backdropFilter: 'blur(10px)'
+            }}>
+              <div style={{ fontSize: '2rem', fontWeight: 'bold', lineHeight: '1' }}>
+                {countdown.seconds}
+              </div>
+              <div style={{ fontSize: '0.75rem', marginTop: '0.25rem', opacity: 0.9 }}>
+                Seconds
+              </div>
+            </div>
+          </div>
+          <p style={{ margin: 0, fontSize: '0.875rem', opacity: 0.95 }}>
+            Tree Season begins Black Friday at 8:00 AM EST
+          </p>
+        </div>
+      )}
+
       {/* Players List - Score Tracking */}
       <div className="card" style={{ padding: '1rem', marginBottom: '0.75rem' }}>
         <h3 style={{ marginBottom: '0.75rem', fontSize: '1.125rem' }}>Team Members ({team.players.length})</h3>
@@ -205,7 +314,7 @@ function Dashboard() {
                     onClick={() => handleDecrement(player._id)}
                     className="btn btn-outline"
                     style={{ fontSize: '1.25rem', padding: '0.5rem 1rem', minWidth: '50px' }}
-                    disabled={player.count === 0 || actionLoading === `dec-${player._id}`}
+                    disabled={!team.allowAddingTrees || player.count === 0 || actionLoading === `dec-${player._id}`}
                   >
                     -
                   </button>
@@ -218,7 +327,7 @@ function Dashboard() {
                     onClick={() => handleIncrement(player._id)}
                     className="btn btn-primary"
                     style={{ fontSize: '1.25rem', padding: '0.5rem 1rem', minWidth: '50px' }}
-                    disabled={actionLoading === `inc-${player._id}`}
+                    disabled={!team.allowAddingTrees || actionLoading === `inc-${player._id}`}
                   >
                     +
                   </button>

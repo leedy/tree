@@ -11,7 +11,13 @@ router.get('/me', authenticateToken, async (req, res) => {
     const team = await Team.findById(req.teamId).populate('season');
 
     if (!team) {
+      console.error('Team not found for ID:', req.teamId);
       return res.status(404).json({ message: 'Team not found' });
+    }
+
+    if (!team.season) {
+      console.error('Team has no season:', team.teamName, team._id);
+      return res.status(500).json({ message: 'Team has no season associated' });
     }
 
     res.json({
@@ -21,10 +27,13 @@ router.get('/me', authenticateToken, async (req, res) => {
       players: team.players,
       totalCount: team.getTotalCount(),
       season: team.season.year,
+      seasonStartDate: team.season.startDate,
+      allowAddingTrees: team.season.allowAddingTrees !== undefined ? team.season.allowAddingTrees : true,
       createdAt: team.createdAt
     });
   } catch (error) {
-    console.error('Error fetching team:', error);
+    console.error('Error fetching team:', error.message);
+    console.error('Stack:', error.stack);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -155,6 +164,11 @@ router.post('/players/:playerId/increment', authenticateToken, async (req, res) 
       return res.status(404).json({ message: 'Team not found' });
     }
 
+    // Check if adding trees is allowed for this season
+    if (!team.season.allowAddingTrees) {
+      return res.status(403).json({ message: 'Adding trees is currently disabled' });
+    }
+
     const player = team.players.id(playerId);
     if (!player) {
       return res.status(404).json({ message: 'Player not found' });
@@ -205,10 +219,15 @@ router.post('/players/:playerId/decrement', authenticateToken, async (req, res) 
       return res.status(400).json({ message: 'Invalid decrement amount (must be 1-100)' });
     }
 
-    const team = await Team.findById(req.teamId);
+    const team = await Team.findById(req.teamId).populate('season');
 
     if (!team) {
       return res.status(404).json({ message: 'Team not found' });
+    }
+
+    // Check if adding trees is allowed for this season
+    if (!team.season.allowAddingTrees) {
+      return res.status(403).json({ message: 'Adding trees is currently disabled' });
     }
 
     const player = team.players.id(playerId);

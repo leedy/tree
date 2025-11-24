@@ -18,6 +18,10 @@ const seasonSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  allowAddingTrees: {
+    type: Boolean,
+    default: true
+  },
   createdAt: {
     type: Date,
     default: Date.now

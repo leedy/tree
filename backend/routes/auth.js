@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import Team from '../models/Team.js';
 import Season from '../models/Season.js';
-import { sendPasswordResetEmail } from '../services/emailService.js';
+import { sendPasswordResetEmail, sendNewTeamNotificationEmail } from '../services/emailService.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -80,6 +80,16 @@ router.post('/register', async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: '30d' }
     );
+
+    // Send notification email to admin (don't wait for it)
+    sendNewTeamNotificationEmail({
+      teamName: team.teamName,
+      email: team.email,
+      season: season.year
+    }).catch(err => {
+      console.error('Failed to send new team notification email:', err);
+      // Continue anyway - don't let email failure block registration
+    });
 
     res.status(201).json({
       message: 'Team registered successfully',

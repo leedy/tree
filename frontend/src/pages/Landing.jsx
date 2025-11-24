@@ -73,7 +73,7 @@ function Landing() {
             marginBottom: '1rem',
             lineHeight: 1.2
           }}>
-            The Ultimate Christmas Tree Spotting Competition!
+            the Ultimate Christmas Spirit Game!
           </h1>
 
           <p style={{
@@ -82,7 +82,7 @@ function Landing() {
             marginBottom: '2rem',
             lineHeight: 1.6
           }}>
-            Compete with friends and family to spot the most Christmas trees on vehicles this holiday season.
+            Play with friends and family to spot the most Christmas trees on vehicles this holiday season.
           </p>
         </div>
 

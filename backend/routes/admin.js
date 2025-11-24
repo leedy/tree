@@ -187,7 +187,7 @@ router.get('/seasons', async (req, res) => {
 // Create season
 router.post('/seasons', async (req, res) => {
   try {
-    const { year, startDate, endDate, isActive } = req.body;
+    const { year, startDate, endDate, isActive, allowAddingTrees } = req.body;
 
     if (!year || !startDate || !endDate) {
       return res.status(400).json({
@@ -204,7 +204,8 @@ router.post('/seasons', async (req, res) => {
       year,
       startDate: new Date(startDate),
       endDate: new Date(endDate),
-      isActive: isActive || false
+      isActive: isActive || false,
+      allowAddingTrees: allowAddingTrees !== undefined ? allowAddingTrees : true
     });
 
     res.status(201).json({
@@ -220,7 +221,7 @@ router.post('/seasons', async (req, res) => {
 // Update season
 router.put('/seasons/:id', async (req, res) => {
   try {
-    const { year, startDate, endDate, isActive } = req.body;
+    const { year, startDate, endDate, isActive, allowAddingTrees } = req.body;
     const season = await Season.findById(req.params.id);
 
     if (!season) {
@@ -236,6 +237,7 @@ router.put('/seasons/:id', async (req, res) => {
     if (startDate !== undefined) season.startDate = new Date(startDate);
     if (endDate !== undefined) season.endDate = new Date(endDate);
     if (isActive !== undefined) season.isActive = isActive;
+    if (allowAddingTrees !== undefined) season.allowAddingTrees = allowAddingTrees;
 
     await season.save();
 
@@ -391,7 +393,8 @@ router.get('/stats', async (req, res) => {
         activeSeason: activeSeason ? {
           year: activeSeason.year,
           startDate: activeSeason.startDate,
-          endDate: activeSeason.endDate
+          endDate: activeSeason.endDate,
+          allowAddingTrees: activeSeason.allowAddingTrees
         } : null
       }
     });

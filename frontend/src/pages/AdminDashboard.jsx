@@ -39,7 +39,8 @@ function AdminDashboard() {
     year: new Date().getFullYear(),
     startDate: '',
     endDate: '',
-    isActive: false
+    isActive: false,
+    allowAddingTrees: true
   });
 
   // Activities state
@@ -124,7 +125,8 @@ function AdminDashboard() {
       year: new Date().getFullYear(),
       startDate: '',
       endDate: '',
-      isActive: false
+      isActive: false,
+      allowAddingTrees: true
     });
   };
 
@@ -134,14 +136,15 @@ function AdminDashboard() {
       year: season.year,
       startDate: season.startDate.split('T')[0],
       endDate: season.endDate.split('T')[0],
-      isActive: season.isActive
+      isActive: season.isActive,
+      allowAddingTrees: season.allowAddingTrees !== undefined ? season.allowAddingTrees : true
     });
   };
 
   const cancelSeasonEdit = () => {
     setEditingSeason(null);
     setCreatingSeason(false);
-    setSeasonFormData({ year: new Date().getFullYear(), startDate: '', endDate: '', isActive: false });
+    setSeasonFormData({ year: new Date().getFullYear(), startDate: '', endDate: '', isActive: false, allowAddingTrees: true });
   };
 
   const saveSeason = async () => {
@@ -244,10 +247,25 @@ function AdminDashboard() {
               {stats.activeSeason && (
                 <div className="card" style={{ gridColumn: 'span 2' }}>
                   <h3 style={{ fontSize: '0.875rem', color: 'var(--color-text-light)', marginBottom: '0.5rem' }}>Active Season</h3>
-                  <p style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{stats.activeSeason.year}</p>
-                  <p style={{ fontSize: '0.875rem', color: 'var(--color-text-light)' }}>
-                    {new Date(stats.activeSeason.startDate).toLocaleDateString()} - {new Date(stats.activeSeason.endDate).toLocaleDateString()}
-                  </p>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                      <p style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '0.25rem' }}>{stats.activeSeason.year}</p>
+                      <p style={{ fontSize: '0.875rem', color: 'var(--color-text-light)', margin: 0 }}>
+                        {new Date(stats.activeSeason.startDate).toLocaleDateString()} - {new Date(stats.activeSeason.endDate).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <p style={{ fontSize: '0.75rem', color: 'var(--color-text-light)', margin: '0 0 0.25rem 0' }}>Tree Tracking</p>
+                      <p style={{
+                        fontSize: '1rem',
+                        fontWeight: 'bold',
+                        color: stats.activeSeason.allowAddingTrees ? 'var(--color-success)' : 'var(--color-error)',
+                        margin: 0
+                      }}>
+                        {stats.activeSeason.allowAddingTrees ? 'Enabled' : 'Disabled'}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
@@ -398,6 +416,16 @@ function AdminDashboard() {
                         Active Season
                       </label>
                     </div>
+                    <div className="form-group">
+                      <label className="label" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <input
+                          type="checkbox"
+                          checked={seasonFormData.allowAddingTrees}
+                          onChange={(e) => setSeasonFormData({ ...seasonFormData, allowAddingTrees: e.target.checked })}
+                        />
+                        Allow Adding Trees
+                      </label>
+                    </div>
                   </div>
                   <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
                     <button onClick={saveSeason} className="btn btn-primary">Save</button>
@@ -414,6 +442,7 @@ function AdminDashboard() {
                       <th style={{ padding: '0.5rem', textAlign: 'left' }}>Start Date</th>
                       <th style={{ padding: '0.5rem', textAlign: 'left' }}>End Date</th>
                       <th style={{ padding: '0.5rem', textAlign: 'center' }}>Active</th>
+                      <th style={{ padding: '0.5rem', textAlign: 'center' }}>Trees Enabled</th>
                       <th style={{ padding: '0.5rem', textAlign: 'right' }}>Actions</th>
                     </tr>
                   </thead>
@@ -425,6 +454,13 @@ function AdminDashboard() {
                         <td style={{ padding: '0.5rem' }}>{new Date(season.endDate).toLocaleDateString()}</td>
                         <td style={{ padding: '0.5rem', textAlign: 'center' }}>
                           {season.isActive && <span style={{ color: 'var(--color-success)' }}>✓</span>}
+                        </td>
+                        <td style={{ padding: '0.5rem', textAlign: 'center' }}>
+                          {season.allowAddingTrees ? (
+                            <span style={{ color: 'var(--color-success)' }}>✓</span>
+                          ) : (
+                            <span style={{ color: 'var(--color-error)' }}>✗</span>
+                          )}
                         </td>
                         <td style={{ padding: '0.5rem', textAlign: 'right' }}>
                           <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
