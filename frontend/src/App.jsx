@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { isAuthenticated, isAdminAuthenticated } from './services/api';
+import usePageTracking from './hooks/usePageTracking';
 import Header from './components/Header';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -32,25 +33,14 @@ function AdminPublicRoute({ children }) {
   return !isAdminAuthenticated() ? children : <Navigate to="/admin/dashboard" />;
 }
 
-function App() {
-  const [isAuth, setIsAuth] = useState(isAuthenticated());
-  const [isAdminAuth, setIsAdminAuth] = useState(isAdminAuthenticated());
-
-  useEffect(() => {
-    // Listen for auth changes
-    const checkAuth = () => {
-      setIsAuth(isAuthenticated());
-      setIsAdminAuth(isAdminAuthenticated());
-    };
-    window.addEventListener('storage', checkAuth);
-    return () => window.removeEventListener('storage', checkAuth);
-  }, []);
+function AppContent({ isAuth, setIsAuth, setIsAdminAuth }) {
+  // Track page views on route changes
+  usePageTracking();
 
   return (
-    <Router>
-      <div className="app">
-        {isAuth && <Header />}
-        <Routes>
+    <div className="app">
+      {isAuth && <Header />}
+      <Routes>
           <Route
             path="/login"
             element={
@@ -134,6 +124,26 @@ function App() {
           />
         </Routes>
       </div>
+  );
+}
+
+function App() {
+  const [isAuth, setIsAuth] = useState(isAuthenticated());
+  const [isAdminAuth, setIsAdminAuth] = useState(isAdminAuthenticated());
+
+  useEffect(() => {
+    // Listen for auth changes
+    const checkAuth = () => {
+      setIsAuth(isAuthenticated());
+      setIsAdminAuth(isAdminAuthenticated());
+    };
+    window.addEventListener('storage', checkAuth);
+    return () => window.removeEventListener('storage', checkAuth);
+  }, []);
+
+  return (
+    <Router>
+      <AppContent isAuth={isAuth} setIsAuth={setIsAuth} setIsAdminAuth={setIsAdminAuth} />
     </Router>
   );
 }

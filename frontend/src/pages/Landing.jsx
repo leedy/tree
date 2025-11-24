@@ -281,7 +281,7 @@ function Landing() {
         </div>
 
         {/* Game Rules */}
-        <div className="card" style={{ marginBottom: '2rem' }}>
+        <div className="card" style={{ marginBottom: '2rem', overflow: 'hidden' }}>
           <div
             onClick={() => setRulesExpanded(!rulesExpanded)}
             style={{
@@ -290,17 +290,34 @@ function Landing() {
               justifyContent: 'space-between',
               alignItems: 'center',
               marginBottom: rulesExpanded ? '1.5rem' : '0',
-              padding: '0.5rem'
+              padding: '1rem',
+              borderRadius: '8px',
+              transition: 'background-color 0.2s ease',
+              backgroundColor: 'transparent',
+              userSelect: 'none'
             }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(46, 125, 50, 0.1)'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
           >
-            <h2 style={{ color: 'var(--color-primary)', margin: 0, textAlign: 'center', flex: 1 }}>
-              📜 Official Game Rules
-            </h2>
+            <div style={{ flex: 1 }}>
+              <h2 style={{ color: 'var(--color-primary)', margin: 0, marginBottom: '0.25rem' }}>
+                📜 Official Game Rules
+              </h2>
+              <p style={{
+                fontSize: '0.875rem',
+                color: 'var(--color-text-light)',
+                margin: 0,
+                fontStyle: 'italic'
+              }}>
+                {rulesExpanded ? 'Click to collapse' : 'Click to expand'}
+              </p>
+            </div>
             <span style={{
               fontSize: '1.5rem',
               color: 'var(--color-primary)',
               transition: 'transform 0.3s ease',
-              transform: rulesExpanded ? 'rotate(180deg)' : 'rotate(0deg)'
+              transform: rulesExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+              marginLeft: '1rem'
             }}>
               ▼
             </span>

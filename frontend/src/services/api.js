@@ -353,3 +353,46 @@ export const adminGetStats = async () => {
   });
   return handleResponse(response);
 };
+
+// Admin Analytics API
+export const adminGetAnalyticsOverview = async () => {
+  const response = await fetch(`${API_URL}/api/admin/analytics/overview`, {
+    headers: getAdminAuthHeader()
+  });
+  return handleResponse(response);
+};
+
+export const adminGetPageStats = async () => {
+  const response = await fetch(`${API_URL}/api/admin/analytics/pages`, {
+    headers: getAdminAuthHeader()
+  });
+  return handleResponse(response);
+};
+
+export const adminGetDailyAnalytics = async (days = 30) => {
+  const response = await fetch(`${API_URL}/api/admin/analytics/daily?days=${days}`, {
+    headers: getAdminAuthHeader()
+  });
+  return handleResponse(response);
+};
+
+export const adminGetRecentViews = async (limit = 50) => {
+  const response = await fetch(`${API_URL}/api/admin/analytics/recent?limit=${limit}`, {
+    headers: getAdminAuthHeader()
+  });
+  return handleResponse(response);
+};
+
+// Tracking API
+export const trackPageView = async (path, referrer = null) => {
+  try {
+    await fetch(`${API_URL}/api/tracking/pageview`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ path, referrer })
+    });
+  } catch (error) {
+    // Silently fail - don't disrupt user experience if tracking fails
+    console.error('Tracking error:', error);
+  }
+};

@@ -14,6 +14,7 @@ import adminRoutes from './routes/admin.js';
 import adminUpdatesRoutes from './routes/adminUpdates.js';
 import contactRoutes from './routes/contact.js';
 import updatesRoutes from './routes/updates.js';
+import trackingRoutes from './routes/tracking.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -40,6 +41,7 @@ app.use('/api/teams', teamRoutes);
 app.use('/api/leaderboards', leaderboardRoutes);
 app.use('/api/activities', activitiesRoutes);
 app.use('/api/updates', updatesRoutes);
+app.use('/api/tracking', trackingRoutes);
 app.use('/api/admin/auth', adminAuthRoutes);
 app.use('/api/admin/updates', adminUpdatesRoutes);
 app.use('/api/admin', adminRoutes);

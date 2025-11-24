@@ -13,6 +13,9 @@ import {
   adminGetActivities,
   adminDeleteActivity,
   adminGetDailyStats,
+  adminGetAnalyticsOverview,
+  adminGetPageStats,
+  adminGetDailyAnalytics,
   removeAdminToken
 } from '../services/api';
 import Calendar from '../components/Calendar';
@@ -50,6 +53,11 @@ function AdminDashboard() {
   // Calendar state
   const [dailyStats, setDailyStats] = useState([]);
 
+  // Analytics state
+  const [analyticsOverview, setAnalyticsOverview] = useState(null);
+  const [pageStats, setPageStats] = useState([]);
+  const [dailyAnalytics, setDailyAnalytics] = useState([]);
+
   useEffect(() => {
     loadData();
   }, [activeTab]);
@@ -74,6 +82,15 @@ function AdminDashboard() {
       } else if (activeTab === 'calendar') {
         const data = await adminGetDailyStats();
         setDailyStats(data.dailyStats);
+      } else if (activeTab === 'analytics') {
+        const [overview, pages, daily] = await Promise.all([
+          adminGetAnalyticsOverview(),
+          adminGetPageStats(),
+          adminGetDailyAnalytics(30)
+        ]);
+        setAnalyticsOverview(overview.analytics);
+        setPageStats(pages.pages);
+        setDailyAnalytics(daily.dailyStats);
       }
     } catch (err) {
       setError(err.message || 'Failed to load data');
@@ -199,7 +216,7 @@ function AdminDashboard() {
         borderBottom: '2px solid var(--color-border)',
         flexWrap: 'wrap'
       }}>
-        {['overview', 'calendar', 'teams', 'seasons', 'activities'].map(tab => (
+        {['overview', 'calendar', 'analytics', 'teams', 'seasons', 'activities'].map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -531,6 +548,133 @@ function AdminDashboard() {
             <div className="card">
               <Calendar dailyStats={dailyStats} year={2025} />
             </div>
+          )}
+
+          {/* Analytics Tab */}
+          {activeTab === 'analytics' && (
+            <>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                <h3 style={{ margin: 0 }}>Site Analytics</h3>
+                <button
+                  onClick={loadData}
+                  className="btn btn-primary"
+                  style={{ padding: '0.5rem 1rem' }}
+                  disabled={loading}
+                >
+                  {loading ? 'Refreshing...' : 'Refresh'}
+                </button>
+              </div>
+
+              {analyticsOverview && (
+                <div style={{ marginBottom: '1.5rem' }}>
+                  <h4 style={{ fontSize: '1rem', marginBottom: '1rem' }}>Overview</h4>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+                    <div className="card">
+                      <h4 style={{ fontSize: '0.875rem', color: 'var(--color-text-light)', marginBottom: '0.5rem' }}>Total Views</h4>
+                      <p style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--color-primary)', margin: 0 }}>
+                        {analyticsOverview.totalViews}
+                      </p>
+                    </div>
+                    <div className="card">
+                      <h4 style={{ fontSize: '0.875rem', color: 'var(--color-text-light)', marginBottom: '0.5rem' }}>Unique Visitors</h4>
+                      <p style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--color-primary)', margin: 0 }}>
+                        {analyticsOverview.uniqueVisitors}
+                      </p>
+                    </div>
+                    <div className="card">
+                      <h4 style={{ fontSize: '0.875rem', color: 'var(--color-text-light)', marginBottom: '0.5rem' }}>Last 24 Hours</h4>
+                      <p style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--color-success)', margin: 0 }}>
+                        {analyticsOverview.viewsLast24h}
+                      </p>
+                    </div>
+                    <div className="card">
+                      <h4 style={{ fontSize: '0.875rem', color: 'var(--color-text-light)', marginBottom: '0.5rem' }}>Last 7 Days</h4>
+                      <p style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--color-success)', margin: 0 }}>
+                        {analyticsOverview.viewsLast7Days}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Page Views by Path */}
+              <div className="card" style={{ marginBottom: '1.5rem' }}>
+                <h3 style={{ marginBottom: '1rem' }}>Page Views by Path</h3>
+                <div style={{ overflowX: 'auto' }}>
+                  <table style={{ width: '100%', fontSize: '0.875rem' }}>
+                    <thead>
+                      <tr style={{ borderBottom: '2px solid var(--color-border)' }}>
+                        <th style={{ padding: '0.5rem', textAlign: 'left' }}>Page</th>
+                        <th style={{ padding: '0.5rem', textAlign: 'center' }}>Total Views</th>
+                        <th style={{ padding: '0.5rem', textAlign: 'center' }}>Unique Visitors</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {pageStats.map((page, index) => (
+                        <tr key={index} style={{ borderBottom: '1px solid var(--color-border)' }}>
+                          <td style={{ padding: '0.5rem' }}>{page.path}</td>
+                          <td style={{ padding: '0.5rem', textAlign: 'center' }}>{page.views}</td>
+                          <td style={{ padding: '0.5rem', textAlign: 'center' }}>{page.uniqueVisitors}</td>
+                        </tr>
+                      ))}
+                      {pageStats.length === 0 && (
+                        <tr>
+                          <td colSpan="3" style={{ padding: '1rem', textAlign: 'center', color: 'var(--color-text-light)' }}>
+                            No data yet
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Daily Analytics Chart */}
+              <div className="card">
+                <h3 style={{ marginBottom: '1rem' }}>Daily Views (Last 30 Days)</h3>
+                {dailyAnalytics.length > 0 ? (
+                  <div style={{ overflowX: 'auto' }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-end', gap: '4px', height: '200px', minWidth: '600px' }}>
+                      {dailyAnalytics.map((day, index) => {
+                        const maxViews = Math.max(...dailyAnalytics.map(d => d.views));
+                        const height = maxViews > 0 ? (day.views / maxViews) * 180 : 0;
+                        return (
+                          <div
+                            key={index}
+                            style={{
+                              flex: 1,
+                              display: 'flex',
+                              flexDirection: 'column',
+                              alignItems: 'center',
+                              justifyContent: 'flex-end'
+                            }}
+                          >
+                            <div
+                              style={{
+                                width: '100%',
+                                height: `${height}px`,
+                                background: 'var(--color-primary)',
+                                borderRadius: '4px 4px 0 0',
+                                position: 'relative',
+                                cursor: 'pointer'
+                              }}
+                              title={`${new Date(day.date).toLocaleDateString()}: ${day.views} views, ${day.uniqueVisitors} unique`}
+                            />
+                            <div style={{ fontSize: '0.65rem', marginTop: '4px', color: 'var(--color-text-light)', transform: 'rotate(-45deg)', transformOrigin: 'top left', whiteSpace: 'nowrap' }}>
+                              {new Date(day.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ) : (
+                  <p style={{ textAlign: 'center', color: 'var(--color-text-light)', padding: '2rem' }}>
+                    No data yet
+                  </p>
+                )}
+              </div>
+            </>
           )}
         </>
       )}

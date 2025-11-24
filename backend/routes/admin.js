@@ -2,6 +2,7 @@ import express from 'express';
 import Team from '../models/Team.js';
 import Season from '../models/Season.js';
 import Activity from '../models/Activity.js';
+import PageView from '../models/PageView.js';
 import { adminAuth } from '../middleware/adminAuth.js';
 
 const router = express.Router();
@@ -401,6 +402,133 @@ router.get('/stats', async (req, res) => {
   } catch (error) {
     console.error('Get stats error:', error);
     res.status(500).json({ message: 'Server error fetching stats' });
+  }
+});
+
+// ============ ANALYTICS ============
+
+// Get analytics overview
+router.get('/analytics/overview', async (req, res) => {
+  try {
+    const totalViews = await PageView.countDocuments();
+    const uniqueVisitors = await PageView.distinct('visitorId').then(ids => ids.length);
+
+    // Get views from last 24 hours
+    const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const viewsLast24h = await PageView.countDocuments({
+      timestamp: { $gte: yesterday }
+    });
+
+    // Get views from last 7 days
+    const lastWeek = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    const viewsLast7Days = await PageView.countDocuments({
+      timestamp: { $gte: lastWeek }
+    });
+
+    res.json({
+      analytics: {
+        totalViews,
+        uniqueVisitors,
+        viewsLast24h,
+        viewsLast7Days
+      }
+    });
+  } catch (error) {
+    console.error('Get analytics overview error:', error);
+    res.status(500).json({ message: 'Server error fetching analytics overview' });
+  }
+});
+
+// Get page views by path
+router.get('/analytics/pages', async (req, res) => {
+  try {
+    const pageStats = await PageView.aggregate([
+      {
+        $group: {
+          _id: '$path',
+          views: { $sum: 1 },
+          uniqueVisitors: { $addToSet: '$visitorId' }
+        }
+      },
+      {
+        $project: {
+          path: '$_id',
+          views: 1,
+          uniqueVisitors: { $size: '$uniqueVisitors' },
+          _id: 0
+        }
+      },
+      { $sort: { views: -1 } }
+    ]);
+
+    res.json({ pages: pageStats });
+  } catch (error) {
+    console.error('Get page stats error:', error);
+    res.status(500).json({ message: 'Server error fetching page stats' });
+  }
+});
+
+// Get daily analytics
+router.get('/analytics/daily', async (req, res) => {
+  try {
+    const days = parseInt(req.query.days) || 30;
+    const startDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+
+    const dailyStats = await PageView.aggregate([
+      {
+        $match: {
+          timestamp: { $gte: startDate }
+        }
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: '$timestamp' },
+            month: { $month: '$timestamp' },
+            day: { $dayOfMonth: '$timestamp' }
+          },
+          views: { $sum: 1 },
+          uniqueVisitors: { $addToSet: '$visitorId' }
+        }
+      },
+      {
+        $project: {
+          date: {
+            $dateFromParts: {
+              year: '$_id.year',
+              month: '$_id.month',
+              day: '$_id.day'
+            }
+          },
+          views: 1,
+          uniqueVisitors: { $size: '$uniqueVisitors' },
+          _id: 0
+        }
+      },
+      { $sort: { date: 1 } }
+    ]);
+
+    res.json({ dailyStats });
+  } catch (error) {
+    console.error('Get daily analytics error:', error);
+    res.status(500).json({ message: 'Server error fetching daily analytics' });
+  }
+});
+
+// Get recent page views
+router.get('/analytics/recent', async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 50;
+
+    const recentViews = await PageView.find()
+      .sort({ timestamp: -1 })
+      .limit(limit)
+      .select('path visitorId timestamp -_id');
+
+    res.json({ recentViews });
+  } catch (error) {
+    console.error('Get recent views error:', error);
+    res.status(500).json({ message: 'Server error fetching recent views' });
   }
 });
 
