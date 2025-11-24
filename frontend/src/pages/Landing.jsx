@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 function Landing() {
   const [timeLeft, setTimeLeft] = useState(null);
+  const [rulesExpanded, setRulesExpanded] = useState(false);
 
   useEffect(() => {
     const calculateTimeLeft = () => {
@@ -73,7 +74,7 @@ function Landing() {
             marginBottom: '1rem',
             lineHeight: 1.2
           }}>
-            the Ultimate Christmas Spirit Game!
+            The Ultimate Christmas Spirit Game!
           </h1>
 
           <p style={{
@@ -281,11 +282,32 @@ function Landing() {
 
         {/* Game Rules */}
         <div className="card" style={{ marginBottom: '2rem' }}>
-          <h2 style={{ color: 'var(--color-primary)', marginBottom: '1.5rem', textAlign: 'center' }}>
-            📜 Official Game Rules
-          </h2>
+          <div
+            onClick={() => setRulesExpanded(!rulesExpanded)}
+            style={{
+              cursor: 'pointer',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: rulesExpanded ? '1.5rem' : '0',
+              padding: '0.5rem'
+            }}
+          >
+            <h2 style={{ color: 'var(--color-primary)', margin: 0, textAlign: 'center', flex: 1 }}>
+              📜 Official Game Rules
+            </h2>
+            <span style={{
+              fontSize: '1.5rem',
+              color: 'var(--color-primary)',
+              transition: 'transform 0.3s ease',
+              transform: rulesExpanded ? 'rotate(180deg)' : 'rotate(0deg)'
+            }}>
+              ▼
+            </span>
+          </div>
 
-          <div style={{ maxWidth: '700px', margin: '0 auto' }}>
+          {rulesExpanded && (
+            <div style={{ maxWidth: '700px', margin: '0 auto' }}>
             <div style={{ marginBottom: '1.5rem' }}>
               <h3 style={{ color: 'var(--color-secondary)', fontSize: '1.125rem', marginBottom: '0.75rem' }}>
                 🎄 What Counts as a Tree?
@@ -340,6 +362,7 @@ function Landing() {
               </p>
             </div>
           </div>
+          )}
         </div>
 
         {/* Season Info */}
