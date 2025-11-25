@@ -66,10 +66,11 @@ await Activity.deleteMany({ teamId: team._id });
 
 ## Medium Priority - Security Hardening
 
-### 6. [ ] Add Security Headers with Helmet.js
+### 6. [x] Add Security Headers with Helmet.js
 **File:** `backend/server.js`
 **Issue:** Missing security headers (CSP, X-Frame-Options, X-Content-Type-Options, etc.)
 **Fix:** Install and configure `helmet` middleware.
+**Status:** COMPLETED - Added helmet middleware with default configuration.
 
 ### 7. [ ] Improve Frontend Auth Validation
 **File:** `frontend/src/services/api.js:204-206`
