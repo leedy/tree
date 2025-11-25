@@ -104,15 +104,17 @@ await Activity.deleteMany({ teamId: team._id });
 
 ## Configuration Issues
 
-### 12. [ ] Fix Port Mismatch in Templates
+### 12. [x] Fix Port Mismatch in Templates
 **Files:** `backend/.env.template:9`, `frontend/vite.config.js:19`
 **Issue:** Template says `PORT=3001` but proxy expects `3002`.
 **Fix:** Update `.env.template` to use `PORT=3002`.
+**Status:** COMPLETED - Updated PORT to 3002 in .env.template.
 
-### 13. [ ] Fix Database Name Inconsistency
+### 13. [x] Fix Database Name Inconsistency
 **File:** `backend/.env.template:6`
 **Issue:** Template uses `treeontruck` but documentation says `treeonatruck`.
 **Fix:** Update template to use `treeonatruck`.
+**Status:** COMPLETED - Updated MONGO_DATABASE to treeonatruck in .env.template.
 
 ---
 
