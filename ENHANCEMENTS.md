@@ -31,10 +31,14 @@ This file tracks identified issues and enhancements for the Tree on a Truck appl
 - `passwordResetLimiter`: 3/hour (forgot-password)
 - `contactLimiter`: 5/hour (contact form)
 
-### 3. [ ] Restrict CORS Origins
+### 3. [x] Restrict CORS Origins
 **File:** `backend/server.js:28`
 **Issue:** `app.use(cors())` allows any origin to make requests.
 **Fix:** Configure CORS to only allow known domains (localhost for dev, production domain).
+**Status:** COMPLETED - Added CORS configuration allowing:
+- localhost:5174, 4173, 3002 (development)
+- treeonatruck.com (production)
+- 192.168.1.20 on any port (local network)
 
 ---
 

@@ -24,8 +24,40 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// CORS configuration
+const corsOptions = {
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      'http://localhost:5174',      // Vite dev server
+      'http://localhost:4173',      // Vite preview
+      'http://localhost:3002',      // Backend serving frontend
+      'https://treeonatruck.com',   // Production
+      'http://treeonatruck.com',    // Production (http)
+    ];
+
+    // Allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    // Allow listed origins
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    // Allow 192.168.1.20 on any port (local network development)
+    if (/^http:\/\/192\.168\.1\.20(:\d+)?$/.test(origin)) {
+      return callback(null, true);
+    }
+
+    // Reject all others
+    callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true
+};
+
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
