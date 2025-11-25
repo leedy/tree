@@ -16,7 +16,7 @@ This file tracks identified issues and enhancements for the Tree on a Truck appl
 **Fix:** Escape HTML entities in user-provided data before inserting into email templates.
 **Status:** COMPLETED - Added `escapeHtml()` helper function and applied to all user inputs in HTML templates. Used `encodeURI()` for href attributes.
 
-### 2. [ ] Add Rate Limiting
+### 2. [x] Add Rate Limiting
 **File:** `backend/server.js`
 **Issue:** No rate limiting on sensitive endpoints makes the app vulnerable to brute force and spam attacks.
 **Affected Endpoints:**
@@ -25,6 +25,11 @@ This file tracks identified issues and enhancements for the Tree on a Truck appl
 - `/api/auth/forgot-password` - email bombing risk
 - `/api/contact` - spam risk
 **Fix:** Install `express-rate-limit` and apply appropriate limits to these endpoints.
+**Status:** COMPLETED - Created `middleware/rateLimiter.js` with specific limiters:
+- `authLimiter`: 10 attempts/15min (login, admin login)
+- `registrationLimiter`: 5/hour (register)
+- `passwordResetLimiter`: 3/hour (forgot-password)
+- `contactLimiter`: 5/hour (contact form)
 
 ### 3. [ ] Restrict CORS Origins
 **File:** `backend/server.js:28`

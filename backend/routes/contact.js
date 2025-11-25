@@ -1,10 +1,11 @@
 import express from 'express';
 import { sendContactEmail } from '../services/emailService.js';
+import { contactLimiter } from '../middleware/rateLimiter.js';
 
 const router = express.Router();
 
 // POST /api/contact - Send contact form email
-router.post('/', async (req, res) => {
+router.post('/', contactLimiter, async (req, res) => {
   try {
     const { name, email, message } = req.body;
 

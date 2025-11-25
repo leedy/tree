@@ -4,6 +4,7 @@ import crypto from 'crypto';
 import Team from '../models/Team.js';
 import Season from '../models/Season.js';
 import { sendPasswordResetEmail, sendNewTeamNotificationEmail } from '../services/emailService.js';
+import { authLimiter, registrationLimiter, passwordResetLimiter } from '../middleware/rateLimiter.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -37,7 +38,7 @@ const getCurrentSeason = async () => {
 };
 
 // Register a new team
-router.post('/register', async (req, res) => {
+router.post('/register', registrationLimiter, async (req, res) => {
   try {
     const { teamName, email, password } = req.body;
 
@@ -109,7 +110,7 @@ router.post('/register', async (req, res) => {
 });
 
 // Login
-router.post('/login', async (req, res) => {
+router.post('/login', authLimiter, async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -156,7 +157,7 @@ router.post('/login', async (req, res) => {
 });
 
 // Request password reset
-router.post('/forgot-password', async (req, res) => {
+router.post('/forgot-password', passwordResetLimiter, async (req, res) => {
   try {
     const { email } = req.body;
 
