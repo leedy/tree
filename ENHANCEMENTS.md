@@ -55,10 +55,11 @@ await Activity.deleteMany({ teamId: team._id });
 ```
 **Fix:** Update field names to match Activity model schema.
 
-### 5. [ ] Fix Leaderboard Null Access
+### 5. [x] Fix Leaderboard Null Access
 **File:** `backend/routes/leaderboards.js:40,89`
 **Issue:** Accessing `teams[0]?.season.year` when teams array could be empty.
 **Fix:** Add proper null checks before accessing season data.
+**Status:** COMPLETED - Changed to `teams[0]?.season?.year ?? null` with proper optional chaining.
 
 ---
 

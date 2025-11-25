@@ -37,7 +37,7 @@ router.get('/teams', async (req, res) => {
 
     res.json({
       leaderboard,
-      season: seasonFilter.season ? teams[0]?.season.year : null
+      season: seasonFilter.season ? teams[0]?.season?.year ?? null : null
     });
   } catch (error) {
     console.error('Error fetching team leaderboard:', error);
@@ -86,7 +86,7 @@ router.get('/players', async (req, res) => {
 
     res.json({
       leaderboard,
-      season: teams[0]?.season.year || null
+      season: teams[0]?.season?.year ?? null
     });
   } catch (error) {
     console.error('Error fetching player leaderboard:', error);
