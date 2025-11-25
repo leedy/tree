@@ -72,15 +72,17 @@ await Activity.deleteMany({ teamId: team._id });
 **Fix:** Install and configure `helmet` middleware.
 **Status:** COMPLETED - Added helmet middleware with default configuration.
 
-### 7. [ ] Improve Frontend Auth Validation
+### 7. [x] Improve Frontend Auth Validation
 **File:** `frontend/src/services/api.js:204-206`
 **Issue:** `isAuthenticated()` only checks if token exists, not if it's valid or expired.
 **Fix:** Decode JWT and check expiration before returning true, or validate with backend.
+**Status:** COMPLETED - Added `isTokenValid()` helper that decodes JWT and checks `exp` claim.
 
-### 8. [ ] Use Separate JWT Secrets
+### 8. [x] Use Separate JWT Secrets
 **File:** `backend/routes/auth.js`, `backend/routes/adminAuth.js`
 **Issue:** Admin and team tokens use the same `JWT_SECRET`.
 **Fix:** Add `ADMIN_JWT_SECRET` environment variable and use for admin tokens.
+**Status:** COMPLETED - Added ADMIN_JWT_SECRET with fallback to JWT_SECRET for backwards compatibility.
 
 ---
 

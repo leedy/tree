@@ -201,8 +201,20 @@ export const getToken = () => {
   return localStorage.getItem('token');
 };
 
+// Decode JWT payload and check expiration
+const isTokenValid = (token) => {
+  if (!token) return false;
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    // Check if token has expired (exp is in seconds, Date.now() is in ms)
+    return payload.exp * 1000 > Date.now();
+  } catch {
+    return false;
+  }
+};
+
 export const isAuthenticated = () => {
-  return !!getToken();
+  return isTokenValid(getToken());
 };
 
 // Admin Auth API
@@ -229,7 +241,7 @@ export const getAdminToken = () => {
 };
 
 export const isAdminAuthenticated = () => {
-  return !!getAdminToken();
+  return isTokenValid(getAdminToken());
 };
 
 const getAdminAuthHeader = () => {

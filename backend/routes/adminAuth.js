@@ -26,10 +26,11 @@ router.post('/login', authLimiter, async (req, res) => {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    // Generate JWT token with adminId
+    // Generate JWT token with adminId (use separate secret for admin tokens)
+    const adminSecret = process.env.ADMIN_JWT_SECRET || process.env.JWT_SECRET;
     const token = jwt.sign(
       { adminId: admin._id, username: admin.username, isAdmin: true },
-      process.env.JWT_SECRET,
+      adminSecret,
       { expiresIn: '7d' }
     );
 

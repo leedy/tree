@@ -9,7 +9,9 @@ export const adminAuth = async (req, res, next) => {
       return res.status(401).json({ message: 'Admin authentication required' });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    // Use separate secret for admin tokens (fallback to JWT_SECRET for backwards compatibility)
+    const adminSecret = process.env.ADMIN_JWT_SECRET || process.env.JWT_SECRET;
+    const decoded = jwt.verify(token, adminSecret);
 
     // Check if this is an admin token
     if (!decoded.adminId) {
