@@ -1,5 +1,16 @@
 import nodemailer from 'nodemailer';
 
+// Escape HTML entities to prevent XSS in email templates
+const escapeHtml = (str) => {
+  if (typeof str !== 'string') return str;
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+};
+
 // Create reusable transporter using Gmail SMTP
 const createTransporter = () => {
   return nodemailer.createTransport({
@@ -32,12 +43,12 @@ ${message}
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #2d5016;">Tree on a Truck - Contact Form</h2>
           <div style="background-color: #f5f5f5; padding: 20px; border-radius: 5px; margin: 20px 0;">
-            <p><strong>Name:</strong> ${name}</p>
-            <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+            <p><strong>Name:</strong> ${escapeHtml(name)}</p>
+            <p><strong>Email:</strong> <a href="mailto:${encodeURI(email)}">${escapeHtml(email)}</a></p>
           </div>
           <div style="background-color: #fff; padding: 20px; border: 1px solid #ddd; border-radius: 5px;">
             <h3>Message:</h3>
-            <p style="white-space: pre-wrap;">${message}</p>
+            <p style="white-space: pre-wrap;">${escapeHtml(message)}</p>
           </div>
         </div>
       `,
@@ -79,11 +90,11 @@ Happy tree hunting!
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #2d5016;">Tree on a Truck - Password Reset</h2>
           <div style="background-color: #f5f5f5; padding: 20px; border-radius: 5px; margin: 20px 0;">
-            <p>Hello <strong>${teamName}</strong>,</p>
+            <p>Hello <strong>${escapeHtml(teamName)}</strong>,</p>
             <p>You requested a password reset for your Tree on a Truck account.</p>
           </div>
           <div style="text-align: center; margin: 30px 0;">
-            <a href="${resetUrl}"
+            <a href="${encodeURI(resetUrl)}"
                style="background-color: #2d5016; color: white; padding: 12px 30px;
                       text-decoration: none; border-radius: 5px; display: inline-block;">
               Reset Password
@@ -92,7 +103,7 @@ Happy tree hunting!
           <div style="background-color: #fff; padding: 20px; border: 1px solid #ddd; border-radius: 5px;">
             <p style="font-size: 14px; color: #666;">
               Or copy and paste this link into your browser:<br>
-              <a href="${resetUrl}">${resetUrl}</a>
+              <a href="${encodeURI(resetUrl)}">${escapeHtml(resetUrl)}</a>
             </p>
             <p style="font-size: 14px; color: #666; margin-top: 20px;">
               <strong>This link will expire in 1 hour.</strong>
@@ -138,9 +149,9 @@ Registration Time: ${new Date().toLocaleString()}
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #2d5016;">🎄 New Team Registration!</h2>
           <div style="background-color: #f0f9ff; padding: 20px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #2d5016;">
-            <p style="margin: 5px 0;"><strong>Team Name:</strong> ${teamName}</p>
-            <p style="margin: 5px 0;"><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
-            <p style="margin: 5px 0;"><strong>Season:</strong> ${season}</p>
+            <p style="margin: 5px 0;"><strong>Team Name:</strong> ${escapeHtml(teamName)}</p>
+            <p style="margin: 5px 0;"><strong>Email:</strong> <a href="mailto:${encodeURI(email)}">${escapeHtml(email)}</a></p>
+            <p style="margin: 5px 0;"><strong>Season:</strong> ${escapeHtml(String(season))}</p>
             <p style="margin: 5px 0;"><strong>Registration Time:</strong> ${new Date().toLocaleString()}</p>
           </div>
           <div style="text-align: center; margin-top: 30px; color: #999; font-size: 12px;">
