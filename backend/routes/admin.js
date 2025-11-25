@@ -121,7 +121,7 @@ router.delete('/teams/:id', async (req, res) => {
     }
 
     // Delete all activities associated with this team
-    await Activity.deleteMany({ team: team._id });
+    await Activity.deleteMany({ teamId: team._id });
 
     await Team.findByIdAndDelete(req.params.id);
 
@@ -154,8 +154,8 @@ router.delete('/teams/:teamId/players/:playerId', async (req, res) => {
 
     // Delete activities for this player
     await Activity.deleteMany({
-      team: team._id,
-      player: req.params.playerId
+      teamId: team._id,
+      playerId: req.params.playerId
     });
 
     res.json({

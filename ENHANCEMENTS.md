@@ -44,7 +44,7 @@ This file tracks identified issues and enhancements for the Tree on a Truck appl
 
 ## Medium Priority - Bugs
 
-### 4. [ ] Fix Activity Deletion Field Names
+### 4. [x] Fix Activity Deletion Field Names
 **File:** `backend/routes/admin.js:124,156-159`
 **Issue:** Activity deletion uses wrong field names (`team` instead of `teamId`, `player` instead of `playerId`).
 ```javascript
@@ -54,6 +54,7 @@ await Activity.deleteMany({ team: team._id });
 await Activity.deleteMany({ teamId: team._id });
 ```
 **Fix:** Update field names to match Activity model schema.
+**Status:** COMPLETED - Changed `team` to `teamId` and `player` to `playerId` to match Activity model.
 
 ### 5. [x] Fix Leaderboard Null Access
 **File:** `backend/routes/leaderboards.js:40,89`
