@@ -98,10 +98,11 @@ await Activity.deleteMany({ teamId: team._id });
 **Issue:** Teams can add unlimited players.
 **Fix:** Add a configurable limit (e.g., 20 players per team).
 
-### 11. [ ] Validate Tracking Path Input
+### 11. [x] Validate Tracking Path Input
 **File:** `backend/routes/tracking.js`
 **Issue:** The `path` field is stored without length or format validation.
 **Fix:** Add length limit and basic path format validation.
+**Status:** COMPLETED - Added validation: path required, max 500 chars, must start with `/`. Referrer limited to 1000 chars.
 
 ---
 
