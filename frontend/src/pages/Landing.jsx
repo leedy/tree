@@ -11,18 +11,33 @@ function Landing() {
       const currentYear = now.getFullYear();
 
       // Black Friday: Fourth Friday of November (day after Thanksgiving)
-      // For 2025: November 28
+      // For 2024: November 29, For 2025: November 28
       // Note: Month is 0-indexed, so 10 = November
-      let blackFriday = new Date(currentYear, 10, 28, 0, 0, 0);
-      let targetYear = currentYear;
+      const blackFriday2024 = new Date(currentYear === 2024 ? 2024 : currentYear, 10, currentYear === 2024 ? 29 : 28, 0, 0, 0);
 
-      // If Black Friday has passed this year, show next year
-      if (now > blackFriday) {
-        blackFriday = new Date(currentYear + 1, 10, 28, 0, 0, 0);
-        targetYear = currentYear + 1;
+      // Christmas Eve at 9 PM (season end time)
+      const christmasEve = new Date(currentYear, 11, 24, 21, 0, 0);
+
+      // Check if we're currently in season (Black Friday to Christmas Eve 9PM)
+      if (now >= blackFriday2024 && now <= christmasEve) {
+        return { days: 0, hours: 0, minutes: 0, seconds: 0, total: 0, started: true, year: currentYear };
       }
 
-      const difference = blackFriday - now;
+      // If past Christmas Eve, count down to next year's Black Friday
+      let targetBlackFriday;
+      let targetYear;
+
+      if (now > christmasEve) {
+        // After Christmas Eve - count to next year
+        targetYear = currentYear + 1;
+        targetBlackFriday = new Date(targetYear, 10, targetYear === 2025 ? 28 : 28, 0, 0, 0);
+      } else {
+        // Before Black Friday - count to this year
+        targetYear = currentYear;
+        targetBlackFriday = blackFriday2024;
+      }
+
+      const difference = targetBlackFriday - now;
 
       if (difference > 0) {
         const days = Math.floor(difference / (1000 * 60 * 60 * 24));
@@ -31,12 +46,6 @@ function Landing() {
         const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
         return { days, hours, minutes, seconds, total: difference, started: false, year: targetYear };
-      }
-
-      // Check if we're in season (Black Friday to Christmas Eve)
-      const christmasEve = new Date(currentYear, 11, 24, 23, 59, 59);
-      if (now >= blackFriday && now <= christmasEve) {
-        return { days: 0, hours: 0, minutes: 0, seconds: 0, total: 0, started: true, year: targetYear };
       }
 
       return { days: 0, hours: 0, minutes: 0, seconds: 0, total: 0, started: false, year: targetYear };

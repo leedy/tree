@@ -8,8 +8,8 @@ function ChristmasCountdown() {
       const now = new Date();
       const currentYear = now.getFullYear();
 
-      // Christmas Eve is December 24, 11:59:59 PM
-      const christmasEve = new Date(currentYear, 11, 24, 23, 59, 59);
+      // Christmas Eve is December 24 at 9:00 PM (season end time)
+      const christmasEve = new Date(currentYear, 11, 24, 21, 0, 0);
 
       // If Christmas Eve has passed this year, use next year
       if (now > christmasEve) {
@@ -76,7 +76,7 @@ function ChristmasCountdown() {
       boxShadow: 'var(--shadow-festive)'
     }}>
       <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem', fontWeight: 'bold' }}>
-        ⏰ Time Until Christmas Eve ⏰
+        ⏰ Season Ends Christmas Eve 9PM ⏰
       </h3>
 
       <div style={{
