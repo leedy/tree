@@ -59,12 +59,13 @@ function Calendar({ dailyStats, year = 2025 }) {
   const renderMonth = (month, days) => {
     return (
       <div style={{
-        flex: '1',
-        minWidth: '280px',
+        flex: '1 1 300px',
+        maxWidth: '100%',
         border: '2px solid var(--color-primary)',
         borderRadius: '12px',
         padding: '1rem',
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        overflow: 'hidden'
       }}>
         {/* Month Header */}
         <h3 style={{
@@ -79,7 +80,7 @@ function Calendar({ dailyStats, year = 2025 }) {
         {/* Day Names */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(7, 1fr)',
+          gridTemplateColumns: 'repeat(7, minmax(0, 1fr))',
           gap: '0.25rem',
           marginBottom: '0.5rem'
         }}>
@@ -99,7 +100,7 @@ function Calendar({ dailyStats, year = 2025 }) {
         {/* Calendar Grid */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(7, 1fr)',
+          gridTemplateColumns: 'repeat(7, minmax(0, 1fr))',
           gap: '0.25rem'
         }}>
           {days.map((dayData, index) => {
