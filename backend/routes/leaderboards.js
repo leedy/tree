@@ -1,6 +1,7 @@
 import express from 'express';
 import Team from '../models/Team.js';
 import Season from '../models/Season.js';
+import Activity from '../models/Activity.js';
 
 const router = express.Router();
 
@@ -109,6 +110,38 @@ router.get('/seasons', async (req, res) => {
     });
   } catch (error) {
     console.error('Error fetching seasons:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Get daily stats for calendar
+router.get('/daily-stats', async (req, res) => {
+  try {
+    // Get activities grouped by date (matching admin endpoint logic)
+    const dailyStats = await Activity.aggregate([
+      {
+        $group: {
+          _id: {
+            year: { $year: '$createdAt' },
+            month: { $month: '$createdAt' },
+            day: { $dayOfMonth: '$createdAt' }
+          },
+          count: { $sum: '$count' },
+          activities: { $sum: 1 }
+        }
+      },
+      { $sort: { '_id.year': 1, '_id.month': 1, '_id.day': 1 } }
+    ]);
+
+    // Format the results
+    const formattedStats = dailyStats.map(stat => ({
+      date: `${stat._id.year}-${String(stat._id.month).padStart(2, '0')}-${String(stat._id.day).padStart(2, '0')}`,
+      treeCount: stat.count
+    }));
+
+    res.json({ dailyStats: formattedStats });
+  } catch (error) {
+    console.error('Error fetching daily stats:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });

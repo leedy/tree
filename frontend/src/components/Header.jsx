@@ -66,6 +66,9 @@ function Header() {
           <NavLink to="/leaderboards" className="nav-link" style={{ padding: '0.4rem 0.6rem', fontSize: '0.875rem' }}>
             Standings
           </NavLink>
+          <NavLink to="/calendar" className="nav-link" style={{ padding: '0.4rem 0.6rem', fontSize: '0.875rem' }}>
+            Calendar
+          </NavLink>
           <NavLink to="/countdown" className="nav-link" style={{ padding: '0.4rem 0.6rem', fontSize: '0.875rem' }}>
             Countdown
           </NavLink>
@@ -140,6 +143,19 @@ function Header() {
             }}
           >
             Standings
+          </NavLink>
+          <NavLink
+            to="/calendar"
+            className="nav-link"
+            onClick={closeMenu}
+            style={{
+              padding: '0.75rem 1rem',
+              fontSize: '1rem',
+              textAlign: 'left',
+              width: '100%'
+            }}
+          >
+            Calendar
           </NavLink>
           <NavLink
             to="/countdown"

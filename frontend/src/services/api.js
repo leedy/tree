@@ -171,6 +171,11 @@ export const getSeasons = async () => {
   return handleResponse(response);
 };
 
+export const getDailyStats = async () => {
+  const response = await fetch(`${API_URL}/api/leaderboards/daily-stats`);
+  return handleResponse(response);
+};
+
 // Activities API
 export const getRecentActivities = async (limit = 20) => {
   const response = await fetch(`${API_URL}/api/activities/recent?limit=${limit}`);

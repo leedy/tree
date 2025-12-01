@@ -9,6 +9,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import Dashboard from './pages/Dashboard';
 import Leaderboards from './pages/Leaderboards';
+import CalendarPage from './pages/CalendarPage';
 import Countdown from './pages/Countdown';
 import Rules from './pages/Rules';
 import Profile from './pages/Profile';
@@ -72,6 +73,14 @@ function AppContent({ isAuth, setIsAuth, setIsAdminAuth }) {
             element={
               <PrivateRoute>
                 <Leaderboards />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/calendar"
+            element={
+              <PrivateRoute>
+                <CalendarPage />
               </PrivateRoute>
             }
           />
