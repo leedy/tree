@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const activitySchema = new mongoose.Schema({
   type: {
     type: String,
-    enum: ['tree_spotted', 'player_added', 'team_created'],
+    enum: ['tree_spotted', 'tree_removed', 'player_added', 'team_created'],
     required: true
   },
   teamId: {

@@ -525,7 +525,7 @@ function AdminDashboard() {
                     <div>
                       <strong>{activity.teamName}</strong>
                       <span style={{ color: 'var(--color-text-light)' }}> - {activity.playerName} </span>
-                      <span>{activity.action === 'increment' ? 'added' : 'removed'} {activity.amount} tree(s)</span>
+                      <span>{activity.type === 'tree_spotted' ? 'spotted' : 'removed'} {activity.count} tree(s)</span>
                       <div style={{ fontSize: '0.75rem', color: 'var(--color-text-light)', marginTop: '0.25rem' }}>
                         {new Date(activity.createdAt).toLocaleString()}
                       </div>

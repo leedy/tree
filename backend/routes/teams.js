@@ -238,6 +238,23 @@ router.post('/players/:playerId/decrement', authenticateToken, async (req, res) 
     player.count = Math.max(0, player.count - amount); // Don't go below 0
     await team.save();
 
+    // Log activity
+    try {
+      await Activity.create({
+        type: 'tree_removed',
+        teamId: team._id,
+        teamName: team.teamName,
+        playerId: player._id,
+        playerName: player.name,
+        count: amount,
+        newTotal: player.count,
+        season: team.season._id
+      });
+    } catch (activityError) {
+      console.error('Error logging activity:', activityError);
+      // Don't fail the request if activity logging fails
+    }
+
     res.json({
       message: 'Count updated successfully',
       player: {
